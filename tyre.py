@@ -14,7 +14,8 @@ class Tyre:
                  season: str = "",
                  fuel_efficiency: str = "",
                  budget: bool = False,
-                 electric: bool = False
+                 electric: bool = False,
+                 tyre_type: str = "Car"
     ) -> None:
         self.brand = brand
         self.pattern = pattern
@@ -29,6 +30,45 @@ class Tyre:
         self.fuel_efficiency = fuel_efficiency
         self.budget = budget
         self.electric = electric
+        self.tyre_type = tyre_type
+
+    def __repr__(self) -> str:
+        return (
+            f"Tyre("
+            f"brand='{self.brand}', "
+            f"tyre_width={self.tyre_width}, "
+            f"aspect_ratio={self.aspect_ratio}, "
+            f"rim_diameter={self.rim_diameter}, "
+            f"load_index={self.load_index}, "
+            f"speed_rating='{self.speed_rating}', "
+            f"pattern='{self.pattern}', "
+            f"price={self.get_price()}, "
+            f"wet_grip='{self.wet_grip}', "
+            f"season='{self.season}', "
+            f"fuel_efficiency='{self.fuel_efficiency}', "
+            f"budget={self.budget}, "
+            f"electric={self.electric}, "
+            f"tyre_type='{self.tyre_type}'"
+            f")"
+        )
+
+    def __str__(self):
+        return (
+            f"{self.brand},"
+            f"{self.tyre_width},"
+            f"{self.aspect_ratio},"
+            f"{self.rim_diameter},"
+            f"{self.load_index},"
+            f"{self.speed_rating},"
+            f"{self.pattern},"
+            f"{self.get_price()},"
+            f"{self.wet_grip},"
+            f"{self.season},"
+            f"{self.fuel_efficiency},"
+            f"{self.budget},"
+            f"{self.electric},"
+            f"{self.tyre_type},"
+        )
 
     def get_price(self) -> float:
         """Returns the price of the tyre as a decimal"""
