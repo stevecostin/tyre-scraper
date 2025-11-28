@@ -16,7 +16,15 @@ class NationalScraper(BaseScraper):
     def scrape(self) -> list[Tyre]:
         tyres: list[Tyre] = []
 
-        soup = BeautifulSoup(requests.get(self.get_request_url()).content, 'lxml')
+        try:
+            response = requests.get(self.get_request_url(), timeout=10)
+            response.raise_for_status()
+
+            soup = BeautifulSoup(response.content, 'lxml')
+        except requests.RequestException as e:
+            print(f"Error fetching {self.url}: {e}")
+
+            return []
 
         divs = soup.select('div[id^="PageContent_ucTyreResults_rptTyres_divTyre_"]')
 
@@ -35,7 +43,6 @@ class NationalScraper(BaseScraper):
             wet_grip = wet_grip[-1] if wet_grip else None
 
             season: str | None = div.get('data-tyre-season')
-            season = season if season else None
 
             fuel_efficiency: str | None = div.get('data-fuel')
             fuel_efficiency = fuel_efficiency[-1] if fuel_efficiency else None
@@ -47,7 +54,6 @@ class NationalScraper(BaseScraper):
             electric: bool | None = electric_tmp.lower() == 'yes' if electric_tmp else None
 
             tyre_type: str | None = div.get('data-tyre-type')
-            tyre_type = tyre_type if tyre_type else None
 
             pattern_temp: Tag | None = div.find('a', id=re.compile('^PageContent_ucTyreResults_rptTyres_hypPattern_'))
             pattern: str | None = pattern_temp.get_text() if pattern_temp else None
@@ -81,7 +87,7 @@ class NationalScraper(BaseScraper):
             try:
                 rim_diameter = int(tyre_specs_overall[1][1:])
                 load_index = int(tyre_specs_overall[2][:-1])
-                speed_rating = tyre_specs_overall[2][-1:]
+                speed_rating = tyre_specs_overall[2][-1]
             except (IndexError, ValueError):
                 pass
 
