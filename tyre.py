@@ -12,7 +12,9 @@ class Tyre:
                  price: float,
                  wet_grip: str = "",
                  season: str = "",
-                 fuel_efficiency: str = ""
+                 fuel_efficiency: str = "",
+                 budget: bool = False,
+                 electric: bool = False
     ) -> None:
         self.brand = brand
         self.pattern = pattern
@@ -25,9 +27,12 @@ class Tyre:
         self.wet_grip = wet_grip
         self.season = season
         self.fuel_efficiency = fuel_efficiency
+        self.budget = budget
+        self.electric = electric
 
     def get_price(self) -> float:
-        return self.price / 100 # Returns the price as a decimal
+        """Returns the price of the tyre as a decimal"""
+        return self.price / 100
     
     def get_speed_as_str(self) -> str:
         """Returns the load index and speed rating (e.g., '91V')"""
