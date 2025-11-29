@@ -43,7 +43,7 @@ class Tyre:
         self.tyre_width = tyre_width
         self.aspect_ratio = aspect_ratio
         self.rim_diameter = rim_diameter
-        self.price = int(price * 100) if price is not None else None # Converts decimal into a whole number if the price isn't None
+        self.price = int(round(price * 100)) if price is not None else None # Rounds the float to avoid floating point errors then converts it into a whole number if the price isn't None
         self.load_index = load_index
         self.speed_rating = speed_rating
         self.wet_grip = wet_grip
@@ -90,6 +90,9 @@ class Tyre:
         Returns:
             str: A string in CSV format containing all the properties of the Tyre. e.g. goodyear,205,55,16,91,V etc.
         """
+        print(f"get---------")
+        print(f"{self.get_price()}")
+        print(f"---------")
         return (
             f"{self.brand},"
             f"{self.tyre_width},"
