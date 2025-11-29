@@ -1,28 +1,45 @@
-from decimal import Decimal
-
 class Tyre:
     def __init__(self,
-                 brand: str,
-                 pattern: str,
-                 tyre_width: int,
-                 aspect_ratio: int,
-                 rim_diameter: int,
-                 load_index: int,
-                 speed_rating: str,
-                 price: float,
-                 wet_grip: str = "",
-                 season: str = "",
-                 fuel_efficiency: str = "",
-                 budget: bool = False,
-                 electric: bool = False,
-                 tyre_type: str = "Car"
+                 brand: str | None,
+                 pattern: str | None,
+                 tyre_width: int | None,
+                 aspect_ratio: int | None,
+                 rim_diameter: int | None,
+                 load_index: int | None,
+                 speed_rating: str | None,
+                 price: float | None,
+                 wet_grip: str | None = None,
+                 season: str | None = None,
+                 fuel_efficiency: str | None = None,
+                 budget: bool | None = None,
+                 electric: bool | None = None,
+                 tyre_type: str | None = None
     ) -> None:
+        """
+        Tyre that stores all the relevant specs relating to a tyre.
+
+        Args:
+            brand (str | None): Manufacturer of the tyre (e.g. Bridgestone, Goodyear, etc.).
+            pattern (str | None): The tread name of the tyre (e.g. Turanza T001, Ecopia EP500, etc.).
+            tyre_width (int | None): The width of the tyre (e.g. 205).
+            aspect_ratio (int | None): The aspect ratio of the tyre (e.g. 55).
+            rim_diameter (int | None): The diameter of the tyre in inches (e.g. 16).
+            load_index (int | None): The load index of the tyre (e.g. 91).
+            speed_rating (str | None): The speed rating of the tyre (e.g. V).
+            price (float | None): The price of one tyre.
+            wet_grip (str | None): The wet grip rating (e.g. A, B, C).
+            season (str | None): The season the tyre is made for (e.g. Summer, Winter, All Seasons).
+            fuel_efficiency (str | None): The fuel efficiency rating (e.g. A, B, C).
+            budget (bool | None): Whether the tyre is a budget tyre.
+            electric (bool | None): Whether the tyre was made for an electric car.
+            tyre_type (str | None): The type of vehicle the tyre is for (e.g. Car).
+        """
         self.brand = brand
         self.pattern = pattern
         self.tyre_width = tyre_width
         self.aspect_ratio = aspect_ratio
         self.rim_diameter = rim_diameter
-        self.price = int(price * 100) # Converts decimal into a whole number
+        self.price = int(price * 100) if price is not None else None # Converts decimal into a whole number if the price isn't None
         self.load_index = load_index
         self.speed_rating = speed_rating
         self.wet_grip = wet_grip
@@ -33,6 +50,12 @@ class Tyre:
         self.tyre_type = tyre_type
 
     def __repr__(self) -> str:
+        """
+        Returns a string representation of the Tyre object in a clearly defined way.
+
+        Returns:
+            str: An easy-to-read string formatted like Tyre(brand='brand_name',tyre_width=205,aspect_ratio=55,rim_diameter=16) etc.
+        """
         return (
             f"Tyre("
             f"brand='{self.brand}', "
@@ -52,7 +75,13 @@ class Tyre:
             f")"
         )
 
-    def __str__(self):
+    def __str__(self) -> str:
+        """
+        A string representation of the Tyre object ready to be written to a CSV file.
+
+        Returns:
+            str: A string in CSV format containing all the properties of the Tyre. e.g. goodyear,205,55,16,91,V etc.
+        """
         return (
             f"{self.brand},"
             f"{self.tyre_width},"
@@ -67,13 +96,12 @@ class Tyre:
             f"{self.fuel_efficiency},"
             f"{self.budget},"
             f"{self.electric},"
-            f"{self.tyre_type},"
+            f"{self.tyre_type}"
         )
 
-    def get_price(self) -> float:
-        """Returns the price of the tyre as a decimal"""
-        return self.price / 100
-    
-    def get_speed_as_str(self) -> str:
-        """Returns the load index and speed rating (e.g., '91V')"""
-        return f"{self.load_index}{self.speed_rating}"
+    def get_price(self) -> float | None:
+        """
+        Returns:
+            float | None: The price of the tyre.
+        """
+        return self.price / 100 if self.price is not None else None
