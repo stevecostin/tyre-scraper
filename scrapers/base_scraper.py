@@ -5,7 +5,7 @@ from tyre import Tyre
 class BaseScraper(ABC):
     def __init__(self, tyre_width: int, aspect_ratio: int, rim_diameter: int) -> None:
         """
-        Creates a new BaseScraper with essentials needed to access the website being scraped.
+        Creates a new BaseScraper with the basic information that will be searched when scraping
 
         Args:
             tyre_width (int): The width of the tyre being scraped for.
@@ -26,10 +26,9 @@ class BaseScraper(ABC):
             tyres (list[Tyre]): The list of Tyres to be written to the file.
         """
         filename: str = self.get_csv_filename()
-        file_exists: bool = os.path.exists(filename)
 
         with open(self.get_csv_filename(), "a", encoding='utf-8') as f:
-            if not file_exists:
+            if not os.path.exists(filename):
                 f.write(Tyre.get_tyre_attribute_names() + '\n')
 
             for tyre in tyres:
@@ -39,28 +38,17 @@ class BaseScraper(ABC):
     def get_url(self) -> str:
         """
         Returns:
-            str: The URL of the website to be scraped (e.g. https://national.co.uk, etc.).
+            str: The URL name of the website to be scraped (e.g. https://national.co.uk, etc.).
         """
         pass
 
     @abstractmethod
-    def get_request_url(self) -> str:
+    def get_request_url(self, url: str) -> str:
         """
+        Args:
+            url (str): The domain name of the website that will be scraped
         Returns:
             str: The exact URL needed to access the relevant tyre information on the website.
-        """
-        pass
-
-    @abstractmethod
-    def scrape(self) -> list[Tyre]:
-        """
-        Starts the scraping process on the URL provided by the get_request_url() method.
-
-        Returns:
-            list[Tyre]: The list of Tyres that have been scraped from the website.
-
-        Raises:
-            RequestException: There was a problem with the connection to the website
         """
         pass
 
@@ -77,3 +65,16 @@ class BaseScraper(ABC):
             str: The name of the CSV file that will be used for writing data to (e.g. [domain].csv).
         """
         return f"{self.domain}.csv"
+
+    @abstractmethod
+    def scrape(self) -> list[Tyre]:
+        """
+        Starts the scraping process on the URL provided by the get_request_url() method.
+
+        Returns:
+            list[Tyre]: The list of Tyres that have been scraped from the website.
+
+        Raises:
+            RequestException: There was a problem with the connection to the website
+        """
+        pass
