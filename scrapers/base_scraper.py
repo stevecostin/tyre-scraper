@@ -1,3 +1,4 @@
+import os
 from abc import ABC, abstractmethod
 from tyre import Tyre
 
@@ -16,19 +17,22 @@ class BaseScraper(ABC):
         self.tyre_width = tyre_width
         self.aspect_ratio = aspect_ratio
         self.rim_diameter = rim_diameter
+        self.domain = self.url.replace('https://', '').replace('http://', '').split('/')[0] # Removes any http:// or https:// from the beginning of the URL
 
-    def write_to_file(self, tyres: list[Tyre]) -> None:
+    def write_to_csv_file(self, tyres: list[Tyre]) -> None:
         """
-        Writes each Tyre entry to a CSV file named after the URL and basic tyre specs. e.g. www.website.com-205-55-16.csv.
+        Writes each Tyre entry to a CSV file named after the URL (e.g. www.website.com.csv).
+        If the file doesn't exist when it's opened for writing it will populate the first line with the csv headers, otherwise it will just write the tyre data.
 
         Args:
             tyres (list[Tyre]): The list of Tyres to be written to the file.
         """
-        domain = self.url.replace('https://', '').replace('http://', '').split('/')[0] # Removes any http:// or https:// from the beginning of the URL
-        filename = f"{domain}-{self.tyre_width}-{self.aspect_ratio}-{self.rim_diameter}.csv"
+        filename: str = self.get_csv_filename()
+        file_exists: bool = os.path.exists(filename)
 
-        with open(filename, 'w', encoding='utf-8') as f:
-            f.write(Tyre.get_tyre_attribute_names() + '\n')
+        with open(self.get_csv_filename(), "a", encoding='utf-8') as f:
+            if not file_exists:
+                f.write(Tyre.get_tyre_attribute_names() + '\n')
 
             for tyre in tyres:
                 f.write(str(tyre) + '\n')
@@ -48,5 +52,22 @@ class BaseScraper(ABC):
 
         Returns:
             list[Tyre]: The list of Tyres that have been scraped from the website.
+
+        Raises:
+            RequestException: There was a problem with the connection to the website
         """
         pass
+
+    def get_basic_tyre_details(self) -> str:
+        """
+        Returns:
+            str: The tyre width, aspect ratio and rim diameter in a friendly format (e.g. 205/55/R16).
+        """
+        return f"{self.tyre_width}/{self.aspect_ratio}/R{self.rim_diameter}"
+
+    def get_csv_filename(self) -> str:
+        """
+        Returns:
+            str: The name of the CSV file that will be used for writing data to (e.g. [domain].csv).
+        """
+        return f"{self.domain}.csv"
