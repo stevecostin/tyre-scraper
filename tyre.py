@@ -90,9 +90,6 @@ class Tyre:
         Returns:
             str: A string in CSV format containing all the properties of the Tyre. e.g. goodyear,205,55,16,91,V etc.
         """
-        print(f"get---------")
-        print(f"{self.get_price()}")
-        print(f"---------")
         return (
             f"{self.brand},"
             f"{self.tyre_width},"
