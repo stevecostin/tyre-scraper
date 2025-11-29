@@ -99,6 +99,31 @@ class Tyre:
             f"{self.tyre_type}"
         )
 
+    @staticmethod
+    def get_tyre_attribute_names() -> str:
+        """
+        A comma separated list of the header names for when writing to a CSV file
+
+        Returns:
+            str: The header names separated by commas
+        """
+        return (
+            "brand,"
+            "tyre_width,"
+            "aspect_ratio,"
+            "rim_diameter,"
+            "load_index,"
+            "speed_rating,"
+            "pattern,"
+            "price,"
+            "wet_grip,"
+            "season,"
+            "fuel_efficiency,"
+            "budget,"
+            "electric,"
+            "tyre_type"
+        )
+
     def get_price(self) -> float | None:
         """
         Returns:
