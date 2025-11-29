@@ -26,9 +26,10 @@ class BaseScraper(ABC):
             tyres (list[Tyre]): The list of Tyres to be written to the file.
         """
         filename: str = self.get_csv_filename()
+        file_exists: bool = os.path.exists(filename)
 
         with open(self.get_csv_filename(), "a", encoding='utf-8') as f:
-            if not os.path.exists(filename):
+            if not file_exists:
                 f.write(Tyre.get_tyre_attribute_names() + '\n')
 
             for tyre in tyres:
