@@ -11,6 +11,8 @@ class Tyre:
                  wet_grip: str | None = None,
                  season: str | None = None,
                  fuel_efficiency: str | None = None,
+                 db_rating_number: int | None = None,
+                 db_rating_letter: str | None = None,
                  budget: bool | None = None,
                  electric: bool | None = None,
                  tyre_type: str | None = None
@@ -28,8 +30,10 @@ class Tyre:
             speed_rating (str | None): The speed rating of the tyre (e.g. V).
             price (float | None): The price of one tyre.
             wet_grip (str | None): The wet grip rating (e.g. A, B, C).
-            season (str | None): The season the tyre is made for (e.g. Summer, Winter, All Seasons).
+            season (str | None): The season the tyre is made for (e.g. Summer, Winter, All Season).
             fuel_efficiency (str | None): The fuel efficiency rating (e.g. A, B, C).
+            db_rating_number (int | None): The decibel rating of the tyre as a number. (e.g. 70dB).
+            db_rating_letter (str | None): The decibel rating of the tyre as a letter. (e.g. B).
             budget (bool | None): Whether the tyre is a budget tyre.
             electric (bool | None): Whether the tyre was made for an electric car.
             tyre_type (str | None): The type of vehicle the tyre is for (e.g. Car).
@@ -45,6 +49,8 @@ class Tyre:
         self.wet_grip = wet_grip
         self.season = season
         self.fuel_efficiency = fuel_efficiency
+        self.db_rating_number = db_rating_number
+        self.db_rating_letter = db_rating_letter
         self.budget = budget
         self.electric = electric
         self.tyre_type = tyre_type
@@ -69,6 +75,8 @@ class Tyre:
             f"wet_grip='{self.wet_grip}', "
             f"season='{self.season}', "
             f"fuel_efficiency='{self.fuel_efficiency}', "
+            f"db_rating_number={self.db_rating_number}, "
+            f"db_rating_letter='{self.db_rating_letter}', "
             f"budget={self.budget}, "
             f"electric={self.electric}, "
             f"tyre_type='{self.tyre_type}'"
@@ -94,6 +102,8 @@ class Tyre:
             f"{self.wet_grip},"
             f"{self.season},"
             f"{self.fuel_efficiency},"
+            f"{self.db_rating_number},"
+            f"{self.db_rating_letter},"
             f"{self.budget},"
             f"{self.electric},"
             f"{self.tyre_type}"
@@ -119,6 +129,8 @@ class Tyre:
             "wet_grip,"
             "season,"
             "fuel_efficiency,"
+            "db_rating_number,"
+            "db_rating_letter,"
             "budget,"
             "electric,"
             "tyre_type"
