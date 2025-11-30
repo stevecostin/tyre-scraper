@@ -5,7 +5,7 @@ from src.tyre import Tyre
 class BaseScraper(ABC):
     def __init__(self, tyre_width: int, aspect_ratio: int, rim_diameter: int) -> None:
         """
-        Creates a new BaseScraper with the basic information that will be searched when scraping
+        Creates a new BaseScraper with the basic information that will be searched when scraping.
 
         Args:
             tyre_width (int): The width of the tyre being scraped for.
@@ -26,10 +26,11 @@ class BaseScraper(ABC):
         pass
 
     @abstractmethod
-    def get_request_url(self, url: str) -> str:
+    def get_request_url(self, url: str, *extras: str) -> str:
         """
         Args:
-            url (str): The domain name of the website that will be scraped
+            url (str): The domain name of the website that will be scraped.
+            extras (str): Any extra information that will be part of the request URL.
         Returns:
             str: The exact URL needed to access the relevant tyre information on the website.
         """
@@ -63,7 +64,7 @@ class BaseScraper(ABC):
         If the file exists the file will be overwritten.
 
         Args:
-            retailers (list[Retailer]): The list of retailer objects that were scraped
+            retailers (list[Retailer]): The list of retailer objects that were scraped.
         """
         with open(BaseScraper.get_csv_filename(), "w", encoding='utf-8') as f:
             f.write(f"retailer,{Tyre.get_tyre_attribute_names()}\n")

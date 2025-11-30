@@ -1,6 +1,5 @@
 import time
 import requests
-
 from retailer import Retailer
 from src.scrapers import BaseScraper, NationalScraper
 from tyre import Tyre

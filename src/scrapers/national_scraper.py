@@ -2,7 +2,6 @@ import requests
 from bs4 import BeautifulSoup
 from bs4.element import Tag
 import re
-
 from src.scrapers.base_scraper import BaseScraper
 from src.tyre import Tyre
 
@@ -14,7 +13,7 @@ class NationalScraper(BaseScraper):
     def get_url(self) -> str:
         return "https://national.co.uk"
 
-    def get_request_url(self, url: str) -> str:
+    def get_request_url(self, url: str, *extras) -> str:
         return f"{url}/tyres-search/{self.tyre_width}-{self.aspect_ratio}-{self.rim_diameter}?pc=DN67RL"
     
     def scrape(self) -> list[Tyre]:
