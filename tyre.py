@@ -71,7 +71,7 @@ class Tyre:
             f"load_index={self.load_index}, "
             f"speed_rating='{self.speed_rating}', "
             f"pattern='{self.pattern}', "
-            f"price={self._get_price()}, "
+            f"price={self.get_price()}, "
             f"wet_grip='{self.wet_grip}', "
             f"season='{self.season}', "
             f"fuel_efficiency='{self.fuel_efficiency}', "
@@ -98,7 +98,7 @@ class Tyre:
             f"{self.load_index},"
             f"{self.speed_rating},"
             f"{self.pattern},"
-            f"{self._get_price()},"
+            f"{self.get_price()},"
             f"{self.wet_grip},"
             f"{self.season},"
             f"{self.fuel_efficiency},"
@@ -136,7 +136,7 @@ class Tyre:
             "tyre_type"
         )
 
-    def _get_price(self) -> float | None:
+    def get_price(self) -> float | None:
         """
         Returns:
             float | None: The price of the tyre.
