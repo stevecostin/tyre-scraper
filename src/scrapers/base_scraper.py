@@ -1,6 +1,6 @@
-import os
 from abc import ABC, abstractmethod
-from tyre import Tyre
+from src.retailer import Retailer
+from src.tyre import Tyre
 
 class BaseScraper(ABC):
     def __init__(self, tyre_width: int, aspect_ratio: int, rim_diameter: int) -> None:
@@ -57,20 +57,22 @@ class BaseScraper(ABC):
         return "tyre_scrape.csv"
 
     @staticmethod
-    def write_to_csv_file(retailer: str, tyres: list[Tyre]) -> None:
+    def write_to_csv_file(retailers: list[Retailer]) -> None:
         """
         Writes each Tyre entry to a CSV file named after the return of get_csv_filename().
         If the file exists the file will be overwritten.
 
         Args:
-            retailer (str): The name of the retailer that was scraped
-            tyres (list[Tyre]): The list of Tyres to be written to the file.
+            retailers (list[Retailer]): The list of retailer objects that were scraped
         """
         with open(BaseScraper.get_csv_filename(), "w", encoding='utf-8') as f:
             f.write(f"retailer,{Tyre.get_tyre_attribute_names()}\n")
 
-            for tyre in tyres:
-                f.write(f"{retailer},{tyre}\n")
+            for retailer in retailers:
+                tyres: list[Tyre] = retailer.tyres
+
+                for tyre in tyres:
+                    f.write(f"{retailer.retailer},{tyre}\n")
 
     def get_basic_tyre_details(self) -> str:
         """

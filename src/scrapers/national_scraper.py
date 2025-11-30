@@ -3,8 +3,8 @@ from bs4 import BeautifulSoup
 from bs4.element import Tag
 import re
 
-from scrapers.base_scraper import BaseScraper
-from tyre import Tyre
+from src.scrapers.base_scraper import BaseScraper
+from src.tyre import Tyre
 
 class NationalScraper(BaseScraper):
     """Scraper for National tyres website"""
