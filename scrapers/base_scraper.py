@@ -65,15 +65,15 @@ class BaseScraper(ABC):
     def write_to_csv_file(self, tyres: list[Tyre]) -> None:
         """
         Writes each Tyre entry to a CSV file named after the URL (e.g. www.website.com.csv).
-        If the file doesn't exist when it's opened for writing it will populate the first line with the csv headers, otherwise it will just write the tyre data.
+        If the file doesn't exist or is empty when it's opened for writing it will populate the first line with the csv headers, otherwise it will just write the tyre data.
 
         Args:
             tyres (list[Tyre]): The list of Tyres to be written to the file.
         """
         filename: str = self.get_csv_filename()
-        file_exists: bool = os.path.exists(filename)
+        file_exists: bool = os.path.exists(filename) and os.path.getsize(filename) > 0
 
-        with open(self.get_csv_filename(), "a", encoding='utf-8') as f:
+        with open(filename, "a", encoding='utf-8') as f:
             if not file_exists:
                 f.write(Tyre.get_tyre_attribute_names() + '\n')
 
