@@ -15,7 +15,7 @@ class BaseScraper(ABC):
         self.tyre_width = tyre_width
         self.aspect_ratio = aspect_ratio
         self.rim_diameter = rim_diameter
-        self.domain = self.get_url().replace('https://', '').replace('http://', '').split('/')[0] # Removes any http:// or https:// from the beginning of the URL
+        self.domain = self.get_url().replace('https://', '').replace('http://', '').replace('www.', '').split('/')[0] # Removes any http:// or https:// from the beginning of the URL
 
     @abstractmethod
     def get_url(self) -> str:
