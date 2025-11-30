@@ -1,8 +1,6 @@
 import sqlite3
 from sqlite3 import Connection, Cursor
-
 from tyre import Tyre
-
 
 class TyreDB:
     """Database handler for tyre scraping"""
@@ -11,6 +9,23 @@ class TyreDB:
         self.conn: Connection = sqlite3.connect("tyres.db")
         self.cursor: Cursor = self.conn.cursor()
         self._create_tables()
+
+    def __enter__(self) -> "TyreDB":
+        """Context manager entry point"""
+        return self
+
+    def __exit__(self, exception_type, exception_val, exception_tb) -> bool:
+        """Context manager exit point - ensures connection is closed"""
+        if exception_type is not None:
+            # If an exception occurred, rollback any uncommitted changes
+            self.conn.rollback()
+        else:
+            # Otherwise commit any pending changes
+            self.conn.commit()
+
+        self.conn.close()
+
+        return False
 
     def _create_tables(self):
         """Create the schema if it doesn't already exist"""
@@ -237,6 +252,7 @@ class TyreDB:
         brand_id: int = self.get_or_create_brand(tyre.brand)
         season_id: int = self.get_or_create_season(tyre.season)
         pattern_id: int = self.get_or_create_pattern(tyre.pattern, brand_id, season_id)
+        vehicle_tyre_type_id: int = self.get_or_create_vehicle_tyre_type(tyre.tyre_type)
 
         self.cursor.execute('''
             INSERT INTO tyre (
@@ -246,7 +262,7 @@ class TyreDB:
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', (
                 tyre.tyre_width, tyre.aspect_ratio, tyre.rim_diameter, tyre.load_index, tyre.speed_rating, pattern_id, tyre.price, tyre.wet_grip, tyre.fuel_efficiency,
-                tyre.db_rating_number, tyre.db_rating_letter, tyre.budget, tyre.electric, tyre.tyre_type
+                tyre.db_rating_number, tyre.db_rating_letter, tyre.budget, tyre.electric, vehicle_tyre_type_id
             )
         )
 
