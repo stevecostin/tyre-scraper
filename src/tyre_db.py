@@ -76,7 +76,7 @@ class TyreDB:
 
         self.cursor.execute('''
             CREATE TABLE IF NOT EXISTS tyre (
-                sku         TEXT PRIMARY KEY,
+                sku         TEXT NOT NULL,
                 retailer_id INTEGER NOT NULL,
                 width INTEGER NOT NULL,
                 aspect_ratio INTEGER NOT NULL,
@@ -92,6 +92,7 @@ class TyreDB:
                 budget INTEGER,
                 electric INTEGER,
                 vehicle_tyre_type_id INTEGER,
+                PRIMARY KEY (sku, retailer_id),
                 FOREIGN KEY (retailer_id) REFERENCES retailer(retailer_id),
                 FOREIGN KEY (pattern_id) REFERENCES pattern(pattern_id),
                 FOREIGN KEY (vehicle_tyre_type_id) REFERENCES vehicle_tyre_type(vehicle_tyre_type_id)
@@ -110,13 +111,13 @@ class TyreDB:
 
     def get_or_create_retailer(self, retailer_name: str) -> int:
         """
-        Gets/creates the retailer_id for a retailer
+        Gets/creates the retailer_id for a retailer.
 
         Args:
-            retailer_name (str): The retailer name to be retrieved or created
+            retailer_name (str): The retailer name to be retrieved or created.
 
         Returns:
-            int: The retailer_id retrieved or created
+            int: The retailer_id retrieved or created.
         """
         self.cursor.execute(
             "SELECT retailer_id FROM retailer WHERE retailer_name = ?", (retailer_name,)
@@ -137,13 +138,13 @@ class TyreDB:
 
     def get_or_create_brand(self, brand_name: str) -> int:
         """
-        Gets/creates the brand_id for a brand name
+        Gets/creates the brand_id for a brand name.
 
         Args:
-            brand_name (str): The brand name to be retrieved or created
+            brand_name (str): The brand name to be retrieved or created.
 
         Returns:
-            int: The brand_id retrieved or created
+            int: The brand_id retrieved or created.
         """
         self.cursor.execute(
             "SELECT brand_id FROM brand WHERE brand_name = ?", (brand_name,)
@@ -164,13 +165,13 @@ class TyreDB:
 
     def get_or_create_season(self, season_name: str) -> int:
         """
-        Gets/creates the season_id for a season name
+        Gets/creates the season_id for a season name.
 
         Args:
-            season_name (str): The season name to be retrieved or created
+            season_name (str): The season name to be retrieved or created.
 
         Returns:
-            int: The season_id retrieved or created
+            int: The season_id retrieved or created.
         """
         self.cursor.execute(
             "SELECT season_id FROM season WHERE season_name = ?", (season_name,)
@@ -191,13 +192,13 @@ class TyreDB:
 
     def get_or_create_vehicle_tyre_type(self, vehicle_tyre_type_name: str) -> int:
         """
-        Gets/creates the vehicle_tyre_type_id for a vehicle tyre type name
+        Gets/creates the vehicle_tyre_type_id for a vehicle tyre type name.
 
         Args:
-            vehicle_tyre_type_name (str): The vehicle tyre type name to be retrieved or created
+            vehicle_tyre_type_name (str): The vehicle tyre type name to be retrieved or created.
 
         Returns:
-            int: The vehicle_tyre_type_id retrieved or created
+            int: The vehicle_tyre_type_id retrieved or created.
         """
         self.cursor.execute(
             "SELECT vehicle_tyre_type_id FROM vehicle_tyre_type WHERE vehicle_tyre_type_name = ?", (vehicle_tyre_type_name,)
@@ -218,15 +219,15 @@ class TyreDB:
 
     def get_or_create_pattern(self, pattern_name: str, brand_id: int, season_id: int) -> int:
         """
-        Gets/creates the pattern_id for a tyre pattern
+        Gets/creates the pattern_id for a tyre pattern.
 
         Args:
-            pattern_name (str): The pattern name to be retrieved or created
-            brand_id (int): The brand id of the pattern
-            season_id (int): The season id of the pattern
+            pattern_name (str): The pattern name to be retrieved or created.
+            brand_id (int): The brand id of the pattern.
+            season_id (int): The season id of the pattern.
 
         Returns:
-            int: The pattern_id retrieved or created
+            int: The pattern_id retrieved or created.
         """
         self.cursor.execute(
             "SELECT pattern_id FROM pattern WHERE pattern_name = ? AND brand_id = ?", (pattern_name, brand_id)
@@ -247,14 +248,15 @@ class TyreDB:
 
     def add_tyre(self, retailer_id: int, tyre: Tyre) -> int:
         """
-        Adds a tyre to the database for a specific retailer
+        Adds a tyre to the database for a specific retailer.
+        If the tyre already exists at a certain retailer the tyres information gets updated with any changes.
 
         Args:
-            retailer_id (int): The ID of the retailer being added
-            tyre (Tyre): The tyre to be added
+            retailer_id (int): The ID of the retailer being added/changed.
+            tyre (Tyre): The tyre to be added/changed.
 
         Returns:
-            int: The tyre_id added
+            int: The tyre_id added.
         """
         brand_id: int = self.get_or_create_brand(tyre.brand)
         season_id: int = self.get_or_create_season(tyre.season)
@@ -267,6 +269,21 @@ class TyreDB:
                 price, wet_grip, fuel_efficiency, db_rating_number, db_rating_letter,
                 budget, electric, vehicle_tyre_type_id
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(sku, retailer_id) DO UPDATE SET
+                width = excluded.width,
+                aspect_ratio = excluded.aspect_ratio,
+                rim_diameter = excluded.rim_diameter,
+                load_index = excluded.load_index,
+                speed_rating = excluded.speed_rating,
+                pattern_id = excluded.pattern_id,
+                price = excluded.price,
+                wet_grip = excluded.wet_grip,
+                fuel_efficiency = excluded.fuel_efficiency,
+                db_rating_number = excluded.db_rating_number,
+                db_rating_letter = excluded.db_rating_letter,
+                budget = excluded.budget,
+                electric = excluded.electric,
+                vehicle_tyre_type_id = excluded.vehicle_tyre_type_id
             ''', (
                 tyre.sku, retailer_id, tyre.tyre_width, tyre.aspect_ratio, tyre.rim_diameter, tyre.load_index, tyre.speed_rating, pattern_id, tyre.price, tyre.wet_grip, tyre.fuel_efficiency,
                 tyre.db_rating_number, tyre.db_rating_letter, tyre.budget, tyre.electric, vehicle_tyre_type_id
