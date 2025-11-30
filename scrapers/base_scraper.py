@@ -59,19 +59,15 @@ class BaseScraper(ABC):
     @staticmethod
     def write_to_csv_file(retailer: str, tyres: list[Tyre]) -> None:
         """
-        Writes each Tyre entry to a CSV file named after the URL (e.g. www.website.com.csv).
-        If the file doesn't exist or is empty when it's opened for writing it will populate the first line with the csv headers, otherwise it will just write the tyre data.
+        Writes each Tyre entry to a CSV file named after the return of get_csv_filename().
+        If the file exists the file will be overwritten.
 
         Args:
             retailer (str): The name of the retailer that was scraped
             tyres (list[Tyre]): The list of Tyres to be written to the file.
         """
-        filename: str = BaseScraper.get_csv_filename()
-        file_exists: bool = os.path.exists(filename) and os.path.getsize(filename) > 0
-
-        with open(filename, "a", encoding='utf-8') as f:
-            if not file_exists:
-                f.write(f"retailer,{Tyre.get_tyre_attribute_names()}\n")
+        with open(BaseScraper.get_csv_filename(), "w", encoding='utf-8') as f:
+            f.write(f"retailer,{Tyre.get_tyre_attribute_names()}\n")
 
             for tyre in tyres:
                 f.write(f"{retailer},{tyre}\n")
