@@ -1,5 +1,6 @@
 class Tyre:
     def __init__(self,
+                 sku: str | None,
                  brand: str | None,
                  pattern: str | None,
                  tyre_width: int | None,
@@ -21,6 +22,7 @@ class Tyre:
         Tyre that stores all the relevant specs relating to a tyre.
 
         Args:
+            sku (str | None): SKU of the tyre.
             brand (str | None): Manufacturer of the tyre (e.g. Bridgestone, Goodyear, etc.).
             pattern (str | None): The tread name of the tyre (e.g. Turanza T001, Ecopia EP500, etc.).
             tyre_width (int | None): The width of the tyre (e.g. 205).
@@ -38,6 +40,7 @@ class Tyre:
             electric (bool | None): Whether the tyre was made for an electric car.
             tyre_type (str | None): The type of vehicle the tyre is for (e.g. Car).
         """
+        self.sku = sku
         self.brand = brand
         self.pattern = pattern
         self.tyre_width = tyre_width
@@ -64,6 +67,7 @@ class Tyre:
         """
         return (
             f"Tyre("
+            f"SKU='{self.sku}', "
             f"brand='{self.brand}', "
             f"tyre_width={self.tyre_width}, "
             f"aspect_ratio={self.aspect_ratio}, "
@@ -91,6 +95,7 @@ class Tyre:
             str: A string in CSV format containing all the properties of the Tyre. e.g. goodyear,205,55,16,91,V etc.
         """
         return (
+            f"{self.sku},"
             f"{self.brand},"
             f"{self.tyre_width},"
             f"{self.aspect_ratio},"
@@ -118,6 +123,7 @@ class Tyre:
             str: The header names separated by commas
         """
         return (
+            "sku,"
             "brand,"
             "tyre_width,"
             "aspect_ratio,"

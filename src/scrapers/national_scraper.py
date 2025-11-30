@@ -66,20 +66,27 @@ class NationalScraper(BaseScraper):
 
             db_rating_number: int | None = None
             db_rating_letter: str | None = None
+            sku: str | None = None
 
             try:
                 tyre_result_div: Tag | None = div.find('div', class_='tyreresult')
 
                 if tyre_result_div:
+                    sku = tyre_result_div.find('button').get('data-partcode')
+
                     # Finds the div with an id that starts with 'PageContent_ucTyreResults_rptTyres_divTyreLabel_'
                     db_div: Tag | None = div.find('div', id=re.compile('^PageContent_ucTyreResults_rptTyres_divTyreLabel_'))
+
                     if db_div:
                         background_img_css: str | None = db_div.get('style')
+
                         if background_img_css:
                             # Matches everything inside the brackets of template url('/tyre-eprel-image.ashx?NL=70&NMV=B&RRC=D&WG=A')
                             match = re.search(r"\(([^)]+)\)", background_img_css)
+
                             if match:
                                 image_url = match.group(1)[1:-1] # Removes the first and last quote
+
                                 if image_url:
                                     image_url = image_url[image_url.find('?')+1:] # Gets the query string (e.g. NL=70&NMV=B&RRC=C&WG=B)
                                     amp_1: int = image_url.find('&')
@@ -131,6 +138,7 @@ class NationalScraper(BaseScraper):
 
             tyres.append(
                 Tyre(
+                    sku=sku,
                     brand=brand,
                     pattern=pattern,
                     tyre_width=tyre_width,

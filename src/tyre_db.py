@@ -76,7 +76,7 @@ class TyreDB:
 
         self.cursor.execute('''
             CREATE TABLE IF NOT EXISTS tyre (
-                tyre_id   INTEGER PRIMARY KEY AUTOINCREMENT,
+                sku         TEXT PRIMARY KEY,
                 retailer_id INTEGER NOT NULL,
                 width INTEGER NOT NULL,
                 aspect_ratio INTEGER NOT NULL,
@@ -263,12 +263,12 @@ class TyreDB:
 
         self.cursor.execute('''
             INSERT INTO tyre (
-                retailer_id, width, aspect_ratio, rim_diameter, load_index, speed_rating, pattern_id,
+                sku, retailer_id, width, aspect_ratio, rim_diameter, load_index, speed_rating, pattern_id,
                 price, wet_grip, fuel_efficiency, db_rating_number, db_rating_letter,
                 budget, electric, vehicle_tyre_type_id
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', (
-                retailer_id, tyre.tyre_width, tyre.aspect_ratio, tyre.rim_diameter, tyre.load_index, tyre.speed_rating, pattern_id, tyre.price, tyre.wet_grip, tyre.fuel_efficiency,
+                tyre.sku, retailer_id, tyre.tyre_width, tyre.aspect_ratio, tyre.rim_diameter, tyre.load_index, tyre.speed_rating, pattern_id, tyre.price, tyre.wet_grip, tyre.fuel_efficiency,
                 tyre.db_rating_number, tyre.db_rating_letter, tyre.budget, tyre.electric, vehicle_tyre_type_id
             )
         )
