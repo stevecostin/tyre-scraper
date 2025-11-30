@@ -77,6 +77,7 @@ class TyreDB:
         self.cursor.execute('''
             CREATE TABLE IF NOT EXISTS tyre (
                 tyre_id   INTEGER PRIMARY KEY AUTOINCREMENT,
+                retailer_id INTEGER NOT NULL,
                 width INTEGER NOT NULL,
                 aspect_ratio INTEGER NOT NULL,
                 rim_diameter INTEGER NOT NULL,
@@ -91,6 +92,7 @@ class TyreDB:
                 budget INTEGER,
                 electric INTEGER,
                 vehicle_tyre_type_id INTEGER,
+                FOREIGN KEY (retailer_id) REFERENCES retailer(retailer_id),
                 FOREIGN KEY (pattern_id) REFERENCES pattern(pattern_id),
                 FOREIGN KEY (vehicle_tyre_type_id) REFERENCES vehicle_tyre_type(vehicle_tyre_type_id)
             )
@@ -243,11 +245,12 @@ class TyreDB:
 
         return self.cursor.lastrowid
 
-    def add_tyre(self, tyre: Tyre) -> int:
+    def add_tyre(self, retailer_id: int, tyre: Tyre) -> int:
         """
-        Adds a tyre to the database
+        Adds a tyre to the database for a specific retailer
 
         Args:
+            retailer_id (int): The ID of the retailer being added
             tyre (Tyre): The tyre to be added
 
         Returns:
@@ -260,12 +263,12 @@ class TyreDB:
 
         self.cursor.execute('''
             INSERT INTO tyre (
-                width, aspect_ratio, rim_diameter, load_index, speed_rating, pattern_id,
+                retailer_id, width, aspect_ratio, rim_diameter, load_index, speed_rating, pattern_id,
                 price, wet_grip, fuel_efficiency, db_rating_number, db_rating_letter,
                 budget, electric, vehicle_tyre_type_id
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', (
-                tyre.tyre_width, tyre.aspect_ratio, tyre.rim_diameter, tyre.load_index, tyre.speed_rating, pattern_id, tyre.price, tyre.wet_grip, tyre.fuel_efficiency,
+                retailer_id, tyre.tyre_width, tyre.aspect_ratio, tyre.rim_diameter, tyre.load_index, tyre.speed_rating, pattern_id, tyre.price, tyre.wet_grip, tyre.fuel_efficiency,
                 tyre.db_rating_number, tyre.db_rating_letter, tyre.budget, tyre.electric, vehicle_tyre_type_id
             )
         )
