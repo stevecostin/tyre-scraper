@@ -1,3 +1,8 @@
+CREATE TABLE retailer
+            (
+                retailer_id   INTEGER PRIMARY KEY AUTOINCREMENT,
+                retailer_name TEXT NOT NULL UNIQUE
+            );
 CREATE TABLE sqlite_sequence(name,seq);
 CREATE TABLE brand (
                 brand_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -22,11 +27,12 @@ CREATE TABLE pattern (
             );
 CREATE TABLE tyre (
                 tyre_id   INTEGER PRIMARY KEY AUTOINCREMENT,
+                retailer_id INTEGER NOT NULL,
                 width INTEGER NOT NULL,
                 aspect_ratio INTEGER NOT NULL,
                 rim_diameter INTEGER NOT NULL,
                 load_index INTEGER,
-                speed_rating VARCHAR(1),
+                speed_rating TEXT,
                 pattern_id INTEGER,
                 price INTEGER,
                 wet_grip TEXT,
@@ -36,11 +42,7 @@ CREATE TABLE tyre (
                 budget INTEGER,
                 electric INTEGER,
                 vehicle_tyre_type_id INTEGER,
+                FOREIGN KEY (retailer_id) REFERENCES retailer(retailer_id),
                 FOREIGN KEY (pattern_id) REFERENCES pattern(pattern_id),
                 FOREIGN KEY (vehicle_tyre_type_id) REFERENCES vehicle_tyre_type(vehicle_tyre_type_id)
-            );
-CREATE TABLE retailer
-            (
-                retailer_id   INTEGER PRIMARY KEY AUTOINCREMENT,
-                retailer_name TEXT NOT NULL UNIQUE
             );
