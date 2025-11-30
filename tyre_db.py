@@ -6,9 +6,13 @@ class TyreDB:
     """Database handler for tyre scraping"""
     def __init__(self):
         """Initialize database connection and create the tables."""
-        self.conn: Connection = sqlite3.connect("tyres.db")
+        self.conn: Connection = sqlite3.connect(TyreDB.get_db_name())
         self.cursor: Cursor = self.conn.cursor()
         self._create_tables()
+
+    @staticmethod
+    def get_db_name():
+        return "tyres.db"
 
     def __enter__(self) -> "TyreDB":
         """Context manager entry point"""
