@@ -33,36 +33,38 @@ class NationalScraper(BaseScraper):
         for div in divs:
             # Gets the brand of tyre
             brand: str | None = div.get('data-brand')
-            brand = brand.title() if brand else None
+            brand = brand.strip().title() if brand else None
 
             # Gets the current price of a single tyre
             price_temp: str | None = div.get('data-price')
             try:
-                price: float | None = float(price_temp) if price_temp else None
+                price: float | None = float(price_temp.strip()) if price_temp else None
             except ValueError:
                 price = None
 
             # Gets the wet grip rating
             wet_grip: str | None = div.get('data-grip')
-            wet_grip = wet_grip[-1] if wet_grip else None
+            wet_grip = wet_grip[-1].strip() if wet_grip else None
 
             # Gets the season the tyre should be driven in
             season: str | None = div.get('data-tyre-season')
+            season = season.strip() if season else None
 
             # Gets the fuel efficiency rating
             fuel_efficiency: str | None = div.get('data-fuel')
-            fuel_efficiency = fuel_efficiency[-1] if fuel_efficiency else None
+            fuel_efficiency = fuel_efficiency[-1].strip() if fuel_efficiency else None
 
             # Gets whether the tyre is a budget tyre or not
             budget_tmp: str | None = div.get('data-budget')
-            budget: bool | None = budget_tmp.lower() == 'true' if budget_tmp else None
+            budget: bool | None = budget_tmp.strip().lower() == 'true' if budget_tmp else None
 
             # Gets whether the tyre is designed for an EV car
             electric_tmp: str | None = div.get('data-electric')
-            electric: bool | None = electric_tmp.lower() == 'yes' if electric_tmp else None
+            electric: bool | None = electric_tmp.strip().lower() == 'yes' if electric_tmp else None
 
             # Gets the vehicle type the tyre was made for
             tyre_type: str | None = div.get('data-tyre-type')
+            tyre_type = tyre_type.strip() if tyre_type else None
 
             db_rating_number: int | None = None
             db_rating_letter: str | None = None
@@ -72,7 +74,16 @@ class NationalScraper(BaseScraper):
                 tyre_result_div: Tag | None = div.find('div', class_='tyreresult')
 
                 if tyre_result_div:
-                    sku = tyre_result_div.find('button').get('data-partcode')
+                    button = tyre_result_div.find('button')
+
+                    if button:
+                        part_code: str | None = button.get('data-partcode')
+
+                        # Must have a sku, if it doesn't the tyre entry is skipped
+                        if part_code:
+                            sku = part_code.strip()
+                        else:
+                            continue
 
                     # Finds the div with an id that starts with 'PageContent_ucTyreResults_rptTyres_divTyreLabel_'
                     db_div: Tag | None = div.find('div', id=re.compile('^PageContent_ucTyreResults_rptTyres_divTyreLabel_'))
@@ -98,7 +109,7 @@ class NationalScraper(BaseScraper):
 
             # Finds the div with an id that starts with 'PageContent_ucTyreResults_rptTyres_hypPattern_' which is the tyre pattern type
             pattern_temp: Tag | None = div.find('a', id=re.compile('^PageContent_ucTyreResults_rptTyres_hypPattern_'))
-            pattern: str | None = pattern_temp.get_text() if pattern_temp else None
+            pattern: str | None = pattern_temp.get_text().strip() if pattern_temp else None
 
             details_div: Tag | None = div.find('div', class_='details')
 
