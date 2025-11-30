@@ -15,6 +15,14 @@ class TyreDB:
     def _create_tables(self):
         """Create the schema if it doesn't already exist"""
         self.cursor.execute('''
+            CREATE TABLE IF NOT EXISTS retailer
+            (
+                retailer_id   INTEGER PRIMARY KEY AUTOINCREMENT,
+                retailer_name TEXT NOT NULL UNIQUE
+            )
+        ''')
+
+        self.cursor.execute('''
             CREATE TABLE IF NOT EXISTS brand (
                 brand_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 brand_name TEXT NOT NULL UNIQUE
@@ -78,6 +86,33 @@ class TyreDB:
         self.get_or_create_vehicle_tyre_type("Car")
 
         self.conn.commit()
+
+    def get_or_create_retailer(self, retailer_name: str) -> int:
+        """
+        Gets/creates the retailer_id for a retailer
+
+        Args:
+            retailer_name (str): The retailer name to be retrieved or created
+
+        Returns:
+            int: The retailer_id retrieved or created
+        """
+        self.cursor.execute(
+            "SELECT retailer_id FROM retailer WHERE retailer_name = ?", (retailer_name,)
+        )
+
+        result: tuple = self.cursor.fetchone()
+
+        if result:
+            return result[0]
+
+        self.cursor.execute(
+            "INSERT INTO retailer (retailer_name) VALUES (?)", (retailer_name,)
+        )
+
+        self.conn.commit()
+
+        return self.cursor.lastrowid
 
     def get_or_create_brand(self, brand_name: str) -> int:
         """
