@@ -1,6 +1,6 @@
 import sqlite3
 from sqlite3 import Connection, Cursor
-from tyre import Tyre
+from src.tyre import Tyre
 
 class TyreDB:
     """Database handler for tyre scraping"""
