@@ -1,9 +1,9 @@
 import time
 import requests
-from retailer import Retailer
+from src.retailer import Retailer
 from src.scrapers import BaseScraper, NationalScraper
-from tyre import Tyre
-from tyre_db import TyreDB
+from src.tyre import Tyre
+from src.tyre_db import TyreDB
 
 def start_scrap(scrapers: list[BaseScraper]) -> float:
     """
