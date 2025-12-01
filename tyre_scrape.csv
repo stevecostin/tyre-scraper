@@ -1,0 +1,110 @@
+retailer,sku,brand,tyre_width,aspect_ratio,rim_diameter,load_index,speed_rating,pattern,price,wet_grip,season,fuel_efficiency,db_rating_number,db_rating_letter,budget,electric,tyre_type
+national.co.uk,2055516GY03V,Goodyear,205,55,16,91,V,Vector 4Seasons Gen 3,103.99,B,All Season,C,70,B,False,False,Car
+national.co.uk,2055516GY02V,Goodyear,205,55,16,91,V,EfficientGrip Performance 2,92.99,A,Summer,B,69,B,False,False,Car
+national.co.uk,2055516AV0V,Avon,205,55,16,91,V,ZV7,83.99,A,Summer,D,70,B,False,False,Car
+national.co.uk,2055516RV1V,Rovelo,205,55,16,91,V,RHP-780P,49.99,C,Summer,D,70,B,True,False,Car
+national.co.uk,2055516RV1W,Rovelo,205,55,16,91,W,RPX-988,63.99,C,Summer,D,71,B,True,False,Car
+national.co.uk,2055516RV2W,Rovelo,205,55,16,91,W,Avenue Sprint,64.99,None,Summer,None,None,None,True,False,Car
+national.co.uk,2055516RV1VXA,Rovelo,205,55,16,94,V,All Weather R4S,77.99,B,All Season,D,72,B,True,False,Car
+national.co.uk,2055516UB111V,Admiral,205,55,16,91,V,RCB008,59.99,C,Summer,D,71,B,False,False,Car
+national.co.uk,2055516UB38V,Nankang,205,55,16,91,V,Nankang Eco-2+,69.99,B,Summer,D,71,B,False,False,Car
+national.co.uk,2055516UB38VX1,Nankang,205,55,16,94,V,Nankang AS-2+,74.99,A,Summer,C,71,B,False,False,Car
+national.co.uk,2055516UB38WX,Nankang,205,55,16,94,W,Nankang AS-2+,77.99,A,Summer,C,71,B,False,False,Car
+national.co.uk,2055516SL2V,Sailun,205,55,16,91,V,Atrezzo Elite 2,80.99,A,Summer,C,71,B,False,False,Car
+national.co.uk,2055516AV70VX,Avon,205,55,16,94,V,ZV7,86.99,A,Summer,D,70,B,False,False,Car
+national.co.uk,2055516AV70WX,Avon,205,55,16,94,W,ZV7,87.99,A,Summer,D,70,B,False,False,Car
+national.co.uk,2055516AV7W,Avon,205,55,16,91,W,ZV7,87.99,A,Summer,D,70,B,False,False,Car
+national.co.uk,2055516HK8H,Hankook,205,55,16,91,H,Ventus Prime 4 K135,91.99,A,Summer,C,69,B,False,False,Car
+national.co.uk,2055516HK4VX,Hankook,205,55,16,94,V,Kinergy 4S2 H750,101.99,B,All Season,C,72,B,False,False,Car
+national.co.uk,2055516SL2Y,Sailun,205,55,16,91,Y,ATREZZO ZSR 2,107.99,A,Summer,B,69,A,False,False,Car
+national.co.uk,2055516HK09H,Hankook,205,55,16,94,H,Ventus Prime 3 K125,113.99,B,Summer,A,71,B,False,False,Car
+national.co.uk,2055516SL1VXA,Sailun,205,55,16,94,V,Atrezzo 4 Seasons,123.99,C,All Season,D,72,B,False,False,Car
+national.co.uk,2055516PR07VP,Pirelli,205,55,16,91,V,Cinturato P7,89.99,B,Summer,C,70,B,False,False,Car
+national.co.uk,2055516BR6H,Bridgestone,205,55,16,91,H,Turanza 6,92.99,A,Summer,B,69,B,False,False,Car
+national.co.uk,2055516PR70V,Pirelli,205,55,16,91,V,Cinturato P7 P7C2,93.99,A,Summer,C,69,B,False,False,Car
+national.co.uk,2055516BR6W,Bridgestone,205,55,16,91,W,Turanza 6,93.99,A,Summer,B,69,B,False,False,Car
+national.co.uk,2055516CT2H,Continental,205,55,16,91,H,EcoContact 5,93.99,B,Summer,B,71,B,False,False,Car
+national.co.uk,2055516GY10V,Goodyear,205,55,16,91,V,EfficientGrip Performance,93.99,C,Summer,A,71,B,False,False,Car
+national.co.uk,2055516GY1V,Goodyear,205,55,16,91,V,EfficientGrip Performance,94.99,C,Summer,A,71,B,False,False,Car
+national.co.uk,2055516DU3V,Dunlop,205,55,16,91,V,SP Sport BluResponse,94.99,C,Summer,B,71,B,False,False,Car
+national.co.uk,2055516BR5V,Bridgestone,205,55,16,91,V,Turanza T005,94.99,A,Summer,A,71,B,False,False,Car
+national.co.uk,2055516BR06V,Bridgestone,205,55,16,91,V,Turanza 6,94.99,A,Summer,B,69,B,False,False,Car
+national.co.uk,2055516DU2V,Dunlop,205,55,16,91,V,SP Sport BluResponse,95.99,B,Summer,B,70,B,False,False,Car
+national.co.uk,2055516CT9W,Continental,205,55,16,91,W,UltraContact,96.99,A,Summer,B,69,B,False,False,Car
+national.co.uk,2055516GY11V,Goodyear,205,55,16,91,V,EfficientGrip Performance,96.99,B,Summer,A,68,A,False,False,Car
+national.co.uk,2055516BR5W,Bridgestone,205,55,16,91,W,Turanza T005,96.99,B,Summer,C,71,B,False,False,Car
+national.co.uk,2055516CT7V,Continental,205,55,16,91,V,PremiumContact 7,97.99,A,Summer,C,71,B,False,False,Car
+national.co.uk,2055516DU1VB,Dunlop,205,55,16,91,V,SP Sport BluResponse,97.99,A,Summer,B,68,A,False,False,Car
+national.co.uk,2055516PR3VX,Pirelli,205,55,16,94,V,Cinturato C3,98.99,A,Summer,C,70,B,False,False,Car
+national.co.uk,2055516GY2Y,Goodyear,205,55,16,91,Y,EfficientGrip Performance 2,98.99,A,Summer,C,69,B,False,False,Car
+national.co.uk,2055516BR51V,Bridgestone,205,55,16,91,V,Ecopia EP150,98.99,B,Summer,B,71,B,False,False,Car
+national.co.uk,2055516GY2W,Goodyear,205,55,16,91,W,EfficientGrip Performance 2,99.99,A,Summer,B,69,B,False,False,Car
+national.co.uk,2055516CT5H,Continental,205,55,16,91,H,EcoContact 5,100.99,B,Summer,B,71,B,False,False,Car
+national.co.uk,2055516CT5WA,Continental,205,55,16,91,W,EcoContact 5,100.99,B,Summer,C,71,B,False,False,Car
+national.co.uk,2055516CT9H,Continental,205,55,16,91,H,UltraContact,102.99,A,Summer,B,69,B,False,False,Car
+national.co.uk,2055516GY1WA,Goodyear,205,55,16,91,W,EfficientGrip Performance,103.99,B,Summer,C,70,B,False,False,Car
+national.co.uk,2055516PR7WA,Pirelli,205,55,16,91,W,Cinturato P7,104.99,B,Summer,C,71,B,False,False,Car
+national.co.uk,2055516BR0WE,Bridgestone,205,55,16,91,W,Turanza ER300A,105.99,B,Summer,C,70,B,False,False,Car
+national.co.uk,2055516CT9V,Continental,205,55,16,91,V,UltraContact,106.99,A,Summer,B,69,B,False,False,Car
+national.co.uk,2055516DU1WB,Dunlop,205,55,16,91,W,SP Sport BluResponse,107.99,A,Summer,B,68,A,False,False,Car
+national.co.uk,2055516GY2H,Goodyear,205,55,16,91,H,EfficientGrip Performance 2,107.99,A,Summer,B,69,B,False,False,Car
+national.co.uk,2055516BR30VA,Bridgestone,205,55,16,91,V,Turanza ER300,107.99,B,Summer,D,71,B,False,False,Car
+national.co.uk,2055516BR61VX,Bridgestone,205,55,16,94,V,Turanza 6,107.99,A,Summer,B,69,B,False,False,Car
+national.co.uk,2055516MN5H,Michelin,205,55,16,91,H,Primacy 5,108.99,A,Summer,B,70,B,False,False,Car
+national.co.uk,2055516MN2V,Michelin,205,55,16,91,V,ePrimacy,108.99,B,Summer,A,69,B,False,True,Car
+national.co.uk,2055516MN3V,Michelin,205,55,16,91,V,CrossClimate 3,108.99,B,All Season,C,72,B,False,False,Car
+national.co.uk,2055516CT4H,Continental,205,55,16,91,H,PremiumContact 7,109.99,A,Summer,C,71,B,False,False,Car
+national.co.uk,2055516CT9VX,Continental,205,55,16,94,V,UltraContact,110.99,A,Summer,B,69,A,False,False,Car
+national.co.uk,2055516CT7VX,Continental,205,55,16,94,V,EcoContact 6,111.99,B,Summer,A,72,B,False,False,Car
+national.co.uk,2055516GY2WX,Goodyear,205,55,16,94,W,EfficientGrip Performance 2,112.99,A,Summer,B,69,A,False,False,Car
+national.co.uk,2055516DU01YR,Dunlop,205,55,16,91,Y,Sport Maxx RT,113.99,B,Summer,C,70,B,False,False,Car
+national.co.uk,2055516MN5V,Michelin,205,55,16,91,V,Primacy 5,114.99,A,Summer,B,70,B,False,False,Car
+national.co.uk,2055516DU8W,Dunlop,205,55,16,91,W,Sport Maxx TT,114.99,C,Summer,C,71,B,False,False,Car
+national.co.uk,2055516MN2VX,Michelin,205,55,16,94,V,CrossClimate +,114.99,B,All Season,B,69,A,False,False,Car
+national.co.uk,2055516MN30H,Michelin,205,55,16,91,H,CrossClimate 3,114.99,B,All Season,C,72,B,False,False,Car
+national.co.uk,2055516CT6HA,Continental,205,55,16,91,H,All Season Contact 2,115.99,B,All Season,C,70,B,False,False,Car
+national.co.uk,2055516MN3VX,Michelin,205,55,16,94,V,CrossClimate +,116.99,B,All Season,B,72,B,False,False,Car
+national.co.uk,2055516MN51W,Michelin,205,55,16,91,W,Primacy 5,117.99,A,Summer,B,70,B,False,False,Car
+national.co.uk,2055516PR7WRF,Pirelli,205,55,16,91,W,Cinturato P7,117.99,B,Summer,D,71,B,False,False,Car
+national.co.uk,2055516MN9H,Michelin,205,55,16,91,H,Energy Saver,119.99,B,Summer,B,70,B,False,False,Car
+national.co.uk,2055516GY1WR,Goodyear,205,55,16,91,W,EfficientGrip,119.99,B,Summer,C,69,B,False,False,Car
+national.co.uk,2055516MN3W,Michelin,205,55,16,91,W,CrossClimate 3,119.99,B,All Season,C,72,B,False,False,Car
+national.co.uk,2055516MN2HX,Michelin,205,55,16,94,H,ePrimacy,119.99,B,Summer,A,70,B,False,True,Car
+national.co.uk,2055516CT6HX,Continental,205,55,16,94,H,EcoContact 5 SEAL,120.99,B,Summer,B,72,B,False,False,Car
+national.co.uk,2055516BR5WR,Bridgestone,205,55,16,91,W,Turanza T005,120.99,B,Summer,B,70,B,False,False,Car
+national.co.uk,2055516CT06HX,Continental,205,55,16,94,H,EcoContact 6,121.99,A,Summer,A,72,B,False,False,Car
+national.co.uk,2055516MN02H,Michelin,205,55,16,91,H,CrossClimate 2,122.99,B,All Season,C,69,A,False,False,Car
+national.co.uk,2055516MN1VXS,Michelin,205,55,16,94,V,ePrimacy S1,123.99,A,Summer,A,70,B,False,True,Car
+national.co.uk,2055516CT6HXA,Continental,205,55,16,94,H,All Season Contact 2,123.99,B,All Season,B,71,B,False,False,Car
+national.co.uk,2055516CT6VA,Continental,205,55,16,91,V,All Season Contact 2,125.99,B,All Season,C,70,B,False,False,Car
+national.co.uk,2055516BR03WRF,Bridgestone,205,55,16,91,W,Turanza ER300,125.99,B,Summer,D,71,B,False,False,Car
+national.co.uk,2055516GY33VX,Goodyear,205,55,16,94,V,Vector 4Seasons Gen 3,125.99,B,All Season,C,70,B,False,False,Car
+national.co.uk,2055516GY4SVXA,Goodyear,205,55,16,94,V,Vector 4Seasons,127.99,C,All Season,C,70,B,False,False,Car
+national.co.uk,2055516GY4VX,Goodyear,205,55,16,94,V,Vector 4Seasons Gen-2,127.99,B,All Season,B,72,B,False,False,Car
+national.co.uk,2055516BR3WRF,Bridgestone,205,55,16,91,W,Turanza ER300A,127.99,B,Summer,D,69,B,False,False,Car
+national.co.uk,2055516GY4SHX,Goodyear,205,55,16,94,H,Vector 4Seasons Gen-2,128.99,C,All Season,B,72,B,False,False,Car
+national.co.uk,2055516MN4YX,Michelin,205,55,16,94,Y,Pilot Sport 4,130.99,A,Summer,C,71,B,False,False,Car
+national.co.uk,2055516GY6VX,Goodyear,205,55,16,94,V,Vector 4Seasons Gen 3,130.99,B,All Season,A,72,B,False,False,Car
+national.co.uk,2055516GY6VR,Goodyear,205,55,16,91,V,Vector 4Seasons Gen-2,131.99,B,All Season,D,71,B,False,False,Car
+national.co.uk,2055516DU4WA,Dunlop,205,55,16,91,W,Sport Maxx RT,132.99,B,Summer,C,69,B,False,False,Car
+national.co.uk,2055516BR8VX,Bridgestone,205,55,16,94,V,Turanza 6,132.99,A,Summer,B,70,B,False,False,Car
+national.co.uk,2055516MN3WR,Michelin,205,55,16,91,W,Primacy 3,132.99,A,Summer,D,71,B,False,False,Car
+national.co.uk,2055516MN004W,Michelin,205,55,16,91,W,Primacy 4,132.99,B,Summer,A,69,B,False,False,Car
+national.co.uk,2055516MN02V,Michelin,205,55,16,91,V,CrossClimate 2,133.99,B,All Season,C,69,A,False,False,Car
+national.co.uk,2055516MN5HX,Michelin,205,55,16,94,H,Primacy 5,134.99,A,Summer,B,70,B,False,False,Car
+national.co.uk,2055516MN4Y,Michelin,205,55,16,91,Y,Pilot Exalto PE2,134.99,B,Summer,D,71,B,False,False,Car
+national.co.uk,2055516MN42VX,Michelin,205,55,16,94,V,CrossClimate 2,135.99,B,All Season,B,69,A,False,False,Car
+national.co.uk,2055516CT6VXA,Continental,205,55,16,94,V,All Season Contact 2,135.99,B,All Season,C,71,B,False,False,Car
+national.co.uk,2055516BR5H,Bridgestone,205,55,16,91,H,Turanza T005,136.99,A,Summer,B,71,B,False,False,Car
+national.co.uk,2055516BR05VX,Bridgestone,205,55,16,94,V,Turanza T005,143.99,A,Summer,B,71,B,False,False,Car
+national.co.uk,2055516MN04VX,Michelin,205,55,16,94,V,Primacy 4,146.99,B,Summer,A,68,A,False,False,Car
+national.co.uk,2055516BR5WXR,Bridgestone,205,55,16,94,W,Turanza T005 DriveGuard,178.99,A,Summer,C,72,B,False,False,Car
+national.co.uk,2255016GY02Y,Goodyear,225,50,16,92,Y,EfficientGrip Performance 2,157.99,A,Summer,B,70,B,False,False,Car
+national.co.uk,2255016UB38VX,Nankang,225,50,16,96,V,Nankang NS-20,114.99,C,Summer,D,72,B,False,False,Car
+national.co.uk,2255016CT6Y,Continental,225,50,16,92,Y,PremiumContact 6,155.99,A,Summer,C,71,B,False,False,Car
+national.co.uk,2255016CT0W,Continental,225,50,16,92,W,UltraContact,182.99,A,Summer,B,69,B,False,False,Car
+national.co.uk,2255016MN4Y,Michelin,225,50,16,92,Y,Pilot Sport 4,183.99,A,Summer,D,70,B,False,False,Car
+national.co.uk,2255016MN2Y,Michelin,225,50,16,92,Y,Pilot Exalto PE2,193.99,B,Summer,D,71,B,False,False,Car
+national.co.uk,2255016PR0NY,Pirelli,225,50,16,92,Y,P Zero Rosso,203.99,A,Summer,D,71,B,False,False,Car
+national.co.uk,2255016MN02Y,Michelin,225,50,16,92,Y,CrossClimate 2,209.99,B,All Season,C,71,B,False,False,Car
+national.co.uk,2255016BR50WR,Bridgestone,225,50,16,92,W,Potenza RE050,213.99,C,Summer,D,71,B,False,False,Car
