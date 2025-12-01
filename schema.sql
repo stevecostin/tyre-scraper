@@ -26,7 +26,7 @@ CREATE TABLE pattern (
                 UNIQUE(pattern_name, brand_id)
             );
 CREATE TABLE tyre (
-                tyre_id   INTEGER PRIMARY KEY AUTOINCREMENT,
+                sku         TEXT NOT NULL,
                 retailer_id INTEGER NOT NULL,
                 width INTEGER NOT NULL,
                 aspect_ratio INTEGER NOT NULL,
@@ -42,6 +42,7 @@ CREATE TABLE tyre (
                 budget INTEGER,
                 electric INTEGER,
                 vehicle_tyre_type_id INTEGER,
+                PRIMARY KEY (sku, retailer_id),
                 FOREIGN KEY (retailer_id) REFERENCES retailer(retailer_id),
                 FOREIGN KEY (pattern_id) REFERENCES pattern(pattern_id),
                 FOREIGN KEY (vehicle_tyre_type_id) REFERENCES vehicle_tyre_type(vehicle_tyre_type_id)
