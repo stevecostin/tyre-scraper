@@ -246,8 +246,10 @@ class TyreDB:
         if result:
             return result[0]
 
+        pattern_checked = pattern_name.strip() if pattern_name else "Unknown"
+
         self.cursor.execute(
-            "INSERT INTO pattern (pattern_name, brand_id, season_id) VALUES (?, ?, ?)", (pattern_name, brand_id, season_id)
+            "INSERT INTO pattern (pattern_name, brand_id, season_id) VALUES (?, ?, ?)", (pattern_checked, brand_id, season_id)
         )
 
         self.conn.commit()
