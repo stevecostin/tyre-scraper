@@ -6,7 +6,7 @@ from scrapers import BaseScraper, NationalScraper, DexelScraper
 from tyre import Tyre
 from tyre_db import TyreDB
 
-def start_scrap(scrapers: list[BaseScraper]) -> tuple[float, int]:
+def start_scrape(scrapers: list[BaseScraper]) -> tuple[float, int]:
     """
     Sequentially scrapes each scrapers website.
     Writes the gathered data to a CSV file and a database.
@@ -101,11 +101,11 @@ def main() -> None:
         DexelScraper(185, 16, 14)
     ]
 
-    scrape_return = start_scrap(scrapers)
+    total_time, total_items_scraped = start_scrape(scrapers)
 
-    total_time_scraping: float = round(scrape_return[0], 2)
+    total_time_scraping: float = round(total_time, 2)
 
-    print(f"Scraping completed in {total_time_scraping:.2f} {get_seconds_formatted_str(total_time_scraping)} with a total of {scrape_return[1]} product{'s' if scrape_return[1] != 1 else ''} scraped.")
+    print(f"Scraping completed in {total_time_scraping:.2f} {get_seconds_formatted_str(total_time_scraping)} with a total of {total_items_scraped} product{'s' if total_items_scraped != 1 else ''} scraped.")
 
 if __name__ == "__main__":
     main()
