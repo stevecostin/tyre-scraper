@@ -29,13 +29,14 @@ def start_scrap(scrapers: list[BaseScraper]) -> tuple[float, int]:
         try:
             scrape_data: list[Tyre] = scraper.scrape()
             retailer = Retailer(scraper.domain, scrape_data) # Stores the scrape data and the website in a single object
-            total_results += len(scrape_data)
+            current_scrape_total: int = len(scrape_data)
+            total_results += current_scrape_total
             time_for_scrape: float = time.time() - start_time
             total_time_scraping += round(time_for_scrape, 2)
 
             retailers.append(retailer) # Adds the retailer object to the existing list of retailers
 
-            print(f"Scraping completed in {time_for_scrape:.2f} {get_seconds_formatted_str(time_for_scrape)} and found {total_results} result{'s' if total_results > 1 or total_results == 0 else ''}.")
+            print(f"Scraping completed in {time_for_scrape:.2f} {get_seconds_formatted_str(time_for_scrape)} and found {current_scrape_total} result{'s' if current_scrape_total != 1 else ''}.")
         except requests.RequestException as e:
             print(f"There was a problem accessing the {scraper.domain} website: {e}")
 
