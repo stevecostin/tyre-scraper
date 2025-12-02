@@ -6,7 +6,7 @@ from scrapers import BaseScraper, NationalScraper, DexelScraper
 from tyre import Tyre
 from tyre_db import TyreDB
 
-def start_scrap(scrapers: list[BaseScraper]) -> float:
+def start_scrap(scrapers: list[BaseScraper]) -> tuple[float, int]:
     """
     Sequentially scrapes each scrapers website.
     Writes the gathered data to a CSV file and a database.
@@ -18,6 +18,7 @@ def start_scrap(scrapers: list[BaseScraper]) -> float:
         float: The total time it took to scrap all the websites.
     """
     total_time_scraping: float = 0
+    total_results: int = 0
     retailers: list[Retailer] = []
 
     for scrape_count, scraper in enumerate(scrapers, start=1):
@@ -28,7 +29,7 @@ def start_scrap(scrapers: list[BaseScraper]) -> float:
         try:
             scrape_data: list[Tyre] = scraper.scrape()
             retailer = Retailer(scraper.domain, scrape_data) # Stores the scrape data and the website in a single object
-            total_results: int = len(scrape_data)
+            total_results += len(scrape_data)
             time_for_scrape: float = time.time() - start_time
             total_time_scraping += round(time_for_scrape, 2)
 
@@ -55,7 +56,7 @@ def start_scrap(scrapers: list[BaseScraper]) -> float:
 
     print("Complete.\n")
 
-    return total_time_scraping
+    return total_time_scraping, total_results
 
 def get_seconds_formatted_str(seconds: float) -> str:
     """
@@ -99,9 +100,11 @@ def main() -> None:
         DexelScraper(185, 16, 14)
     ]
 
-    total_time_scraping: float = round(start_scrap(scrapers), 2)
+    scrape_return = start_scrap(scrapers)
 
-    print(f"Scraping completed in {total_time_scraping:.2f} {get_seconds_formatted_str(total_time_scraping)}.")
+    total_time_scraping: float = round(scrape_return[0], 2)
+
+    print(f"Scraping completed in {total_time_scraping:.2f} {get_seconds_formatted_str(total_time_scraping)} with a total of {scrape_return[1]} product{'s' if scrape_return[1] != 1 else ''} scraped.")
 
 if __name__ == "__main__":
     main()
