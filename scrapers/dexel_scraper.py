@@ -132,7 +132,7 @@ class DexelScraper(BaseScraper):
         time.sleep(0.5)
         branch_button.click()
 
-        WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.LINK_TEXT, '>')))
+        WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'div.tkf-product')))
 
         return True
 
@@ -144,7 +144,7 @@ class DexelScraper(BaseScraper):
             list[Tyre]: The list of Tyres scraped.
         """
         driver: WebDriver = self.load_webdriver()
-        # Natigates to the results page step by step with random time delay intervals.
+        # Navigates to the results page step by step with random time delay intervals.
         # If None is returned the match was unsuccessful
         if not self.navigate_to_results(driver):
             return []
@@ -259,12 +259,14 @@ class DexelScraper(BaseScraper):
             try:
                 # At the bottom of the search results page, as long as there's a '>' button it means there's more pages to load
                 next_page_button = driver.find_element(By.LINK_TEXT, '>')
-                driver.execute_script("arguments[0].scrollIntoView(true);", next_page_button)
+                DexelScraper.scroll_into_view(driver, next_page_button)
                 time.sleep(0.5)
                 next_page_button.click() # Click the '>' button and wait to see if there's another one, if not break out and finish
-                WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.LINK_TEXT, '>')))
+                WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.LINK_TEXT, '>')))
                 time.sleep(utils.random_number())
             except NoSuchElementException:
                 break # Breaks out of the while loop
+
+        driver.close()
 
         return tyres
