@@ -1,0 +1,195 @@
+import re
+import time
+from bs4 import BeautifulSoup, ResultSet
+from bs4.element import Tag
+from selenium import webdriver
+from selenium.common import NoSuchElementException
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.ie.webdriver import WebDriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support.expected_conditions import title_is
+from selenium.webdriver.support.select import Select
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+import utils
+from scrapers.base_scraper import BaseScraper
+from tyre import Tyre
+
+class DexelScraper(BaseScraper):
+    """Scraper for Dexel tyres website"""
+    def __init__(self, tyre_width: int, aspect_ratio: int, rim_diameter: int) -> None:
+        super().__init__(tyre_width, aspect_ratio, rim_diameter)
+
+    def get_url(self) -> str:
+        return "https://www.dexel.co.uk"
+
+    def get_request_url(self, url: str, *extras) -> str:
+        return ""
+
+    def load_webdriver(self) -> WebDriver:
+        options = Options()
+        options.add_argument('--disable-blink-features=AutomationControlled')
+        options.add_experimental_option("excludeSwitches", ["enable-automation"])
+        options.add_experimental_option('useAutomationExtension', False)
+        options.add_argument('user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36...')
+        driver = webdriver.Chrome(options=options)
+        driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
+        driver.get(self.get_url())
+
+        return driver
+
+    def navigate_to_results(self, driver: WebDriver) -> None:
+        tyre_select_btn: WebElement = driver.find_element(By.PARTIAL_LINK_TEXT, 'Search by Tyre Size')
+        tyre_select_btn.click()
+
+        time.sleep(utils.random_number())
+
+        width_dropdown: WebElement = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'width_list')))
+        select = Select(width_dropdown)
+        select.select_by_visible_text(str(self.tyre_width))
+
+        profile_dropdown: WebElement = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'profile_list')))
+
+        time.sleep(utils.random_number())
+
+        WebDriverWait(driver, 10).until(lambda dropdown: len(Select(dropdown.find_element(By.CLASS_NAME, 'profile_list')).options) > 1)
+        select = Select(profile_dropdown)
+        select.select_by_visible_text(str(self.aspect_ratio))
+
+        rim_dropdown: WebElement = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'size_list')))
+
+        time.sleep(utils.random_number())
+
+        WebDriverWait(driver, 10).until(lambda dropdown: len(Select(dropdown.find_element(By.CLASS_NAME, 'size_list')).options) > 1)
+        select = Select(rim_dropdown)
+        select.select_by_visible_text(str(self.rim_diameter))
+
+        time.sleep(utils.random_number())
+
+        search_button: WebElement = driver.find_element(By.PARTIAL_LINK_TEXT, 'Search')
+        search_button.click()
+
+        time.sleep(utils.random_number())
+
+        button = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Select This Branch']")))
+        button.click()
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.LINK_TEXT, '>')))
+
+    def scrape(self) -> list[Tyre]:
+        driver: WebDriver = self.load_webdriver()
+        self.navigate_to_results(driver)
+        next_page_button: WebElement
+        tyres: list[Tyre] = []
+
+        while True:
+            soup: BeautifulSoup = BeautifulSoup(driver.page_source, 'lxml')
+            divs: ResultSet[Tag] = soup.select('div[class="tkf-product"]')
+
+            for div in divs:
+                sku: str | None = None
+                load_index: int | None = None
+                speed_rating: str | None = None
+                db_rating_letter = None # This website doesn't have letter ratings
+                brand: str | None = None
+                pattern: str | None = None
+                price: float | None = None
+                wet_grip: str | None = None
+                season: str | None = None
+                fuel_efficiency: str | None = None
+                db_rating_number: int | None = None
+                budget = None # This website doesn't list if a tyre is budget
+                electric: bool = False
+                tyre_type: str | None = None
+
+                tyre_details_div: Tag | None = div.find('p', class_='para-text')
+                price_span: Tag | None = div.find('span', class_='price_number')
+
+                if price_span:
+                    price = float(price_span.get_text(strip=True)[1:])
+
+                fuel_efficiency_div: Tag | None = div.find('div', class_=re.compile('^tyre_info_model fuel'))
+
+                if fuel_efficiency_div:
+                    fuel_efficiency = fuel_efficiency_div.get_text(strip=True)
+
+                wet_grip_div: Tag | None = div.find('div', class_=re.compile('^tyre_info_model grip'))
+
+                if wet_grip_div:
+                    wet_grip = wet_grip_div.get_text(strip=True)
+
+                db_rating_number_div: Tag | None = div.find('div', class_='exterior-noice')
+
+                if db_rating_number_div:
+                    db_rating_number = int(db_rating_number_div.get_text(strip=True))
+
+                tyre_icons_div: Tag | None = div.find('div', class_='tyre-icons')
+
+                if tyre_icons_div:
+                    weather_icon_tag: Tag | None = tyre_icons_div.find('i', class_=re.compile('^icon-'))
+
+                    if weather_icon_tag:
+                        weather: str | None = weather_icon_tag.get('title')
+
+                        if weather:
+                            season = weather.lower().capitalize()
+
+                tyre_icons_vehicle_div: Tag | None = div.find('div', class_=re.compile('^tyre-icons vehicle-types'))
+
+                if tyre_icons_vehicle_div:
+                    vehicle_icon_tag: Tag | None = tyre_icons_div.find('i', class_=re.compile('^icon-'))
+
+                    if vehicle_icon_tag:
+                        vehicle_type: str | None = vehicle_icon_tag.get('title')
+
+                        if vehicle_type:
+                            tyre_type = vehicle_type.lower().capitalize()
+
+                ev_button: Tag | None = div.find('button', title='Electric Vehicle')
+                electric: bool = ev_button != None
+
+                if tyre_details_div:
+                    tyre_speed_details: str | None = tyre_details_div.get_text(strip=True).split()[1]
+                    load_index = int(tyre_speed_details[:-1])
+                    speed_rating = tyre_speed_details[-1:]
+
+                form: Tag | None = div.find('form', class_='book_tyre')
+
+                if form:
+                    sku = form.find('input', name='prodCode').get('value').strip()
+                    brand = form.find('input', name='brand').get('value').strip()
+                    pattern = form.find('input', name='pattern').get('value').strip()
+
+                tyres.append(
+                    Tyre(
+                        sku=sku,
+                        brand=brand,
+                        pattern=pattern,
+                        tyre_width=self.tyre_width,
+                        aspect_ratio=self.aspect_ratio,
+                        rim_diameter=self.rim_diameter,
+                        load_index=load_index,
+                        speed_rating=speed_rating,
+                        price=price,
+                        wet_grip=wet_grip,
+                        season=season,
+                        fuel_efficiency=fuel_efficiency,
+                        db_rating_number=db_rating_number,
+                        db_rating_letter=db_rating_letter,
+                        budget=budget,
+                        electric=electric,
+                        tyre_type=tyre_type
+                    )
+                )
+
+            try:
+                next_page_button = driver.find_element(By.LINK_TEXT, '>')
+                next_page_button.click()
+                WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.LINK_TEXT, '>')))
+                time.sleep(utils.random_number())
+            except NoSuchElementException:
+                break
+
+        return tyres

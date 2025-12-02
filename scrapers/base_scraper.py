@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
-from src.retailer import Retailer
-from src.tyre import Tyre
+from retailer import Retailer
+from tyre import Tyre
 
 class BaseScraper(ABC):
     def __init__(self, tyre_width: int, aspect_ratio: int, rim_diameter: int) -> None:

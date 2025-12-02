@@ -1,9 +1,10 @@
 import time
 import requests
-from src.retailer import Retailer
-from src.scrapers import BaseScraper, NationalScraper
-from src.tyre import Tyre
-from src.tyre_db import TyreDB
+import utils
+from retailer import Retailer
+from scrapers import BaseScraper, NationalScraper, DexelScraper
+from tyre import Tyre
+from tyre_db import TyreDB
 
 def start_scrap(scrapers: list[BaseScraper]) -> float:
     """
@@ -18,11 +19,6 @@ def start_scrap(scrapers: list[BaseScraper]) -> float:
     """
     total_time_scraping: float = 0
     retailers: list[Retailer] = []
-
-    SLEEP_COUNT: int = 5  # Seconds between each scrape
-
-    # Initialise the database and create the tables if needed
-    db = TyreDB()
 
     for scrape_count, scraper in enumerate(scrapers, start=1):
         print(f"Scraping {scraper.domain} for tyres with specs {scraper.get_basic_tyre_details()}.")
@@ -44,14 +40,18 @@ def start_scrap(scrapers: list[BaseScraper]) -> float:
 
         # Sleeps before starting the next scrape
         if scrape_count < len(scrapers):
-            print(f"\nWaiting {SLEEP_COUNT} seconds before the next scrape...\n")
-            time.sleep(SLEEP_COUNT)
+            sleep_count: int = utils.random_number()
+            print(f"\nWaiting {sleep_count} seconds before the next scrape...\n")
+            time.sleep(sleep_count)
 
     print(f"\nWriting CSV data to '{BaseScraper.get_csv_filename()}' and database data to '{TyreDB.get_db_name()}'...")
 
     # After all scraping has completed the data is saved to a CSV and the database
     BaseScraper.write_to_csv_file(retailers)
-    write_scrapes_to_db(db, retailers)
+
+    # Use context manager to automatically close database connection
+    with TyreDB() as db:
+        write_scrapes_to_db(db, retailers)
 
     print("Complete.\n")
 
@@ -89,9 +89,10 @@ def main() -> None:
     print("Scraping will now begin...\n")
 
     scrapers: list[BaseScraper] = [
-        NationalScraper(205, 55, 16),
-        NationalScraper(225, 50, 16),
-        NationalScraper(185, 16, 14)
+        # NationalScraper(205, 55, 16),
+        # NationalScraper(225, 50, 16),
+        # NationalScraper(185, 16, 14)
+        DexelScraper(205, 55, 16),
     ]
 
     total_time_scraping: float = round(start_scrap(scrapers), 2)

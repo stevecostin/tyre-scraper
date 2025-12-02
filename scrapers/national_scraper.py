@@ -1,9 +1,10 @@
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, ResultSet
 from bs4.element import Tag
 import re
-from src.scrapers.base_scraper import BaseScraper
-from src.tyre import Tyre
+from requests import Response
+from scrapers.base_scraper import BaseScraper
+from tyre import Tyre
 
 class NationalScraper(BaseScraper):
     """Scraper for National tyres website"""
@@ -20,14 +21,14 @@ class NationalScraper(BaseScraper):
         tyres: list[Tyre] = []
 
         try:
-            response = requests.get(self.get_request_url(self.get_url()), timeout=10)
+            response: Response = requests.get(self.get_request_url(self.get_url()), timeout=10)
             response.raise_for_status()
 
-            soup = BeautifulSoup(response.content, 'lxml')
+            soup: BeautifulSoup = BeautifulSoup(response.content, 'lxml')
         except requests.RequestException as e:
             raise requests.RequestException(e)
 
-        divs = soup.select('div[id^="PageContent_ucTyreResults_rptTyres_divTyre_"]')
+        divs: ResultSet[Tag] = soup.select('div[id^="PageContent_ucTyreResults_rptTyres_divTyre_"]')
 
         for div in divs:
             # Gets the brand of tyre
@@ -59,7 +60,7 @@ class NationalScraper(BaseScraper):
 
             # Gets whether the tyre is designed for an EV car
             electric_tmp: str | None = div.get('data-electric')
-            electric: bool | None = electric_tmp.strip().lower() == 'yes' if electric_tmp else None
+            electric: bool = electric_tmp.strip().lower() == 'yes' if electric_tmp else False
 
             # Gets the vehicle type the tyre was made for
             tyre_type: str | None = div.get('data-tyre-type')
@@ -73,7 +74,7 @@ class NationalScraper(BaseScraper):
                 tyre_result_div: Tag | None = div.find('div', class_='tyreresult')
 
                 if tyre_result_div:
-                    button = tyre_result_div.find('button')
+                    button: Tag = tyre_result_div.find('button')
 
                     if button:
                         part_code: str | None = button.get('data-partcode')
@@ -95,7 +96,7 @@ class NationalScraper(BaseScraper):
                             match = re.search(r"\(([^)]+)\)", background_img_css)
 
                             if match:
-                                image_url = match.group(1)[1:-1] # Removes the first and last quote
+                                image_url: str = match.group(1)[1:-1] # Removes the first and last quote
 
                                 if image_url:
                                     image_url = image_url[image_url.find('?')+1:] # Gets the query string (e.g. NL=70&NMV=B&RRC=C&WG=B)
@@ -112,9 +113,8 @@ class NationalScraper(BaseScraper):
 
             details_div: Tag | None = div.find('div', class_='details')
 
-            tyre_specs_overall: list | None = None
-            tyre_width: int | None = None
-            aspect_ratio: int | None = None
+            load_index: int | None = None
+            speed_rating: str | None = None
 
             try:
                 # Drill down 2 <p> tags
@@ -126,24 +126,12 @@ class NationalScraper(BaseScraper):
 
                     if tyre_specs_text:
                         # Splits out the aspects of the tyre specs (e.g. 205/55)
-                        tyre_specs_overall = tyre_specs_text.split()
+                        tyre_specs_overall: list[str] | None = tyre_specs_text.split()
+
                         if tyre_specs_overall:
-                            tyre_width_aspect: list = tyre_specs_overall[0].split('/')
-                            tyre_width = int(tyre_width_aspect[0])
-                            aspect_ratio = int(tyre_width_aspect[1])
+                            load_index = int(tyre_specs_overall[2][:-1])  # Gets the number from something like '91V'
+                            speed_rating = tyre_specs_overall[2][-1]  # Stores the 'V' part
             except (AttributeError, IndexError, ValueError) as e:
-                print(f"Error setting tyre spec data: {e}")
-
-            rim_diameter: int | None = None
-            load_index: int | None = None
-            speed_rating: str | None = None
-
-            try:
-                # Extract out the other parts of the tyre specs
-                rim_diameter = int(tyre_specs_overall[1][1:]) # Removes the 'R' from the diameter
-                load_index = int(tyre_specs_overall[2][:-1]) # Gets the number from something like '91V'
-                speed_rating = tyre_specs_overall[2][-1] # Stores the 'V' part
-            except (IndexError, ValueError) as e:
                 print(f"Error setting tyre spec data: {e}")
 
             tyres.append(
@@ -151,9 +139,9 @@ class NationalScraper(BaseScraper):
                     sku=sku,
                     brand=brand,
                     pattern=pattern,
-                    tyre_width=tyre_width,
-                    aspect_ratio=aspect_ratio,
-                    rim_diameter=rim_diameter,
+                    tyre_width=self.tyre_width,
+                    aspect_ratio=self.aspect_ratio,
+                    rim_diameter=self.rim_diameter,
                     load_index=load_index,
                     speed_rating=speed_rating,
                     price=price,

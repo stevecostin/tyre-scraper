@@ -1,4 +1,4 @@
-from src.tyre import Tyre
+from tyre import Tyre
 
 class Retailer:
     def __init__(self, retailer: str, tyres: list[Tyre]):
