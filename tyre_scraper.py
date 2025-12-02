@@ -89,10 +89,12 @@ def main() -> None:
     print("Scraping will now begin...\n")
 
     scrapers: list[BaseScraper] = [
-        # NationalScraper(205, 55, 16),
-        # NationalScraper(225, 50, 16),
-        # NationalScraper(185, 16, 14)
+        NationalScraper(205, 55, 16),
+        NationalScraper(225, 50, 16),
+        NationalScraper(185, 16, 14),
         DexelScraper(205, 55, 16),
+        DexelScraper(225, 50, 16),
+        DexelScraper(185, 16, 14)
     ]
 
     total_time_scraping: float = round(start_scrap(scrapers), 2)
