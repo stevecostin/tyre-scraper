@@ -151,7 +151,7 @@ class TyreDB:
             int: The brand_id retrieved or created.
         """
         self.cursor.execute(
-            "SELECT brand_id FROM brand WHERE brand_name = ?", (brand_name,)
+            "SELECT brand_id FROM brand WHERE brand_name = ?", (brand_name.title(),)
         )
 
         result: tuple = self.cursor.fetchone()
@@ -160,25 +160,29 @@ class TyreDB:
             return result[0]
 
         self.cursor.execute(
-            "INSERT INTO brand (brand_name) VALUES (?)", (brand_name,)
+            "INSERT INTO brand (brand_name) VALUES (?)", (brand_name.title(),)
         )
 
         self.conn.commit()
 
         return self.cursor.lastrowid
 
-    def get_or_create_season(self, season_name: str) -> int:
+    def get_or_create_season(self, season_name: str | None) -> int:
         """
         Gets/creates the season_id for a season name.
+        Season names are normalized to title case for consistency.
 
         Args:
-            season_name (str): The season name to be retrieved or created.
+            season_name (str | None): The season name to be retrieved or created.
 
         Returns:
             int: The season_id retrieved or created.
         """
+        # Normalize to title case for consistency, default to "None" if empty
+        normalized_name = season_name.title() if season_name else "None"
+
         self.cursor.execute(
-            "SELECT season_id FROM season WHERE season_name = ?", (season_name,)
+            "SELECT season_id FROM season WHERE season_name = ?", (normalized_name,)
         )
 
         result: tuple = self.cursor.fetchone()
@@ -187,7 +191,7 @@ class TyreDB:
             return result[0]
 
         self.cursor.execute(
-            "INSERT INTO season (season_name) VALUES (?)", (season_name,)
+            "INSERT INTO season (season_name) VALUES (?)", (normalized_name,)
         )
 
         self.conn.commit()
@@ -205,7 +209,7 @@ class TyreDB:
             int: The vehicle_tyre_type_id retrieved or created.
         """
         self.cursor.execute(
-            "SELECT vehicle_tyre_type_id FROM vehicle_tyre_type WHERE vehicle_tyre_type_name = ?", (vehicle_tyre_type_name,)
+            "SELECT vehicle_tyre_type_id FROM vehicle_tyre_type WHERE vehicle_tyre_type_name = ?", (vehicle_tyre_type_name.title(),)
         )
 
         result: tuple = self.cursor.fetchone()
@@ -214,7 +218,7 @@ class TyreDB:
             return result[0]
 
         self.cursor.execute(
-            "INSERT INTO vehicle_tyre_type (vehicle_tyre_type_name) VALUES (?)", (vehicle_tyre_type_name,)
+            "INSERT INTO vehicle_tyre_type (vehicle_tyre_type_name) VALUES (?)", (vehicle_tyre_type_name.title(),)
         )
 
         self.conn.commit()
