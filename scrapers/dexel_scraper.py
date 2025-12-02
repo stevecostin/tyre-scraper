@@ -45,25 +45,44 @@ class DexelScraper(BaseScraper):
 
         return driver
 
-    def navigate_to_results(self, driver: WebDriver) -> None:
+    @staticmethod
+    def scroll_into_view(driver: WebDriver, element: WebElement) -> None:
+        """
+        Sends the JavaScript to scroll the WebElement into view.
+
+        Args:
+            driver (WebDriver): WebDriver instance.
+            element (WebElement): The WebElement to be scrolled into view.
+        """
+        driver.execute_script("arguments[0].scrollIntoView(true);", element)
+
+    def navigate_to_results(self, driver: WebDriver) -> bool:
         """
         Step by step clicks and loads of part of the webpage to navigate to where the results will be listed.
 
         Args:
             driver (WebDriver): The object needed to be able to interact with the loaded webpage.
+        Returns:
+            bool: True if everything was successful, False if the search criteria wasn't found.
         """
         # Searches for the Search button
-        tyre_select_btn: WebElement = driver.find_element(By.LINK_TEXT, 'Search by Tyre Size.')
-        driver.execute_script("arguments[0].scrollIntoView(true);", tyre_select_btn) # Scrolls the button into view otherwise an error will occur when simulating the click
+        tyre_select_button: WebElement = driver.find_element(By.LINK_TEXT, 'Search by Tyre Size.')
+        DexelScraper.scroll_into_view(driver, tyre_select_button) # Scrolls the button into view otherwise an error will occur when simulating the click
         time.sleep(0.5)
-        tyre_select_btn.click()
+        tyre_select_button.click()
 
         time.sleep(utils.random_number())
 
         # Wait until the width dropdown is populated
         width_dropdown: WebElement = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'width_list')))
         select = Select(width_dropdown)
-        driver.execute_script("arguments[0].scrollIntoView(true);", width_dropdown)
+        tyre_widths = [option.text for option in select.options] # Create a list of all the tyre width options
+
+        # If the tyre_width doesn't appear in that list return None
+        if str(self.tyre_width) not in tyre_widths:
+            return False
+
+        DexelScraper.scroll_into_view(driver, width_dropdown)
         time.sleep(0.5)
         select.select_by_visible_text(str(self.tyre_width))
 
@@ -74,9 +93,14 @@ class DexelScraper(BaseScraper):
 
         # Check that there's more than one option available
         WebDriverWait(driver, 10).until(lambda dropdown: len(Select(dropdown.find_element(By.CLASS_NAME, 'profile_list')).options) > 1)
-        driver.execute_script("arguments[0].scrollIntoView(true);", profile_dropdown)
+        DexelScraper.scroll_into_view(driver, profile_dropdown)
         time.sleep(0.5)
         select = Select(profile_dropdown)
+        aspect_ratios = [option.text for option in select.options]
+
+        if str(self.aspect_ratio) not in aspect_ratios:
+            return False
+
         select.select_by_visible_text(str(self.aspect_ratio))
 
         rim_dropdown: WebElement = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'size_list')))
@@ -84,26 +108,33 @@ class DexelScraper(BaseScraper):
         time.sleep(utils.random_number())
 
         WebDriverWait(driver, 10).until(lambda dropdown: len(Select(dropdown.find_element(By.CLASS_NAME, 'size_list')).options) > 1)
-        driver.execute_script("arguments[0].scrollIntoView(true);", rim_dropdown)
+        DexelScraper.scroll_into_view(driver, rim_dropdown)
         time.sleep(0.5)
         select = Select(rim_dropdown)
+        rim_diameters = [option.text for option in select.options]
+
+        if str(self.rim_diameter) not in rim_diameters:
+            return False
+
         select.select_by_visible_text(str(self.rim_diameter))
 
         time.sleep(utils.random_number())
 
         search_button: WebElement = driver.find_element(By.PARTIAL_LINK_TEXT, 'Search')
-        driver.execute_script("arguments[0].scrollIntoView(true);", search_button)
+        DexelScraper.scroll_into_view(driver, search_button)
         time.sleep(0.5)
         search_button.click()
 
         time.sleep(utils.random_number())
 
         branch_button = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Select This Branch']")))
-        driver.execute_script("arguments[0].scrollIntoView(true);", branch_button)
+        DexelScraper.scroll_into_view(driver, branch_button)
         time.sleep(0.5)
         branch_button.click()
 
         WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.LINK_TEXT, '>')))
+
+        return True
 
     def scrape(self) -> list[Tyre]:
         """
@@ -113,7 +144,11 @@ class DexelScraper(BaseScraper):
             list[Tyre]: The list of Tyres scraped.
         """
         driver: WebDriver = self.load_webdriver()
-        self.navigate_to_results(driver) # Natigates to the results page step by step with random time delay intervals
+        # Natigates to the results page step by step with random time delay intervals.
+        # If None is returned the match was unsuccessful
+        if not self.navigate_to_results(driver):
+            return []
+
         next_page_button: WebElement # Holds a reference to the '>' next page button each time a page loads
         tyres: list[Tyre] = []
 
