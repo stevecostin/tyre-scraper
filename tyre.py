@@ -46,7 +46,7 @@ class Tyre:
         self.tyre_width = tyre_width
         self.aspect_ratio = aspect_ratio
         self.rim_diameter = rim_diameter
-        self.price = int(round(price * 100)) if price is not None else None # Rounds the float to avoid floating point errors then converts it into a whole number if the price isn't None
+        self.price_pence = int(round(price * 100)) if price is not None else None # Rounds the float to avoid floating point errors then converts it into a whole number if the price isn't None
         self.load_index = load_index
         self.speed_rating = speed_rating
         self.wet_grip = wet_grip
@@ -147,4 +147,4 @@ class Tyre:
         Returns:
             float | None: The price of the tyre.
         """
-        return self.price / 100 if self.price is not None else None
+        return self.price_pence / 100 if self.price_pence is not None else None

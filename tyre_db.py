@@ -293,7 +293,7 @@ class TyreDB:
                 electric = excluded.electric,
                 vehicle_tyre_type_id = excluded.vehicle_tyre_type_id
             ''', (
-                tyre.sku, retailer_id, tyre.tyre_width, tyre.aspect_ratio, tyre.rim_diameter, tyre.load_index, tyre.speed_rating, pattern_id, tyre.price, tyre.wet_grip, tyre.fuel_efficiency,
+                tyre.sku, retailer_id, tyre.tyre_width, tyre.aspect_ratio, tyre.rim_diameter, tyre.load_index, tyre.speed_rating, pattern_id, tyre.price_pence, tyre.wet_grip, tyre.fuel_efficiency,
                 tyre.db_rating_number, tyre.db_rating_letter, tyre.budget, tyre.electric, vehicle_tyre_type_id
             )
         )
