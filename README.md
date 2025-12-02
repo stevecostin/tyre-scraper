@@ -12,7 +12,7 @@ Activate the virtual environment
 - .venv\Scripts\activate (Windows)
 
 Install the requirements
-  - pip install -r requirements.txt
+- pip install -r requirements.txt
 
 Run the program
-- python -m src.tyre_scraper
+- python tyre_scraper
