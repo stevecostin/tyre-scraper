@@ -298,6 +298,4 @@ class TyreDB:
             )
         )
 
-        self.conn.commit()
-
         return self.cursor.lastrowid

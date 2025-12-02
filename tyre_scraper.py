@@ -84,6 +84,8 @@ def write_scrapes_to_db(db: TyreDB, retailers: list[Retailer]) -> None:
         for tyre in tyres:
             db.add_tyre(retailer_id, tyre)
 
+        db.conn.commit()
+
 def main() -> None:
     print("Welcome to the tyre scraper.")
     print("Scraping will now begin...\n")
