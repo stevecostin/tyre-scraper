@@ -15,4 +15,4 @@ Install the requirements
 - pip install -r requirements.txt
 
 Run the program
-- python tyre_scraper
+- python tyre_scraper.py
