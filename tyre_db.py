@@ -256,7 +256,7 @@ class TyreDB:
 
         return self.cursor.lastrowid
 
-    def add_tyre(self, retailer_id: int, tyre: Tyre) -> int:
+    def add_tyre(self, retailer_id: int, tyre: Tyre) -> None:
         """
         Adds a tyre to the database for a specific retailer.
         If the tyre already exists at a certain retailer the tyres information gets updated with any changes.
@@ -264,9 +264,6 @@ class TyreDB:
         Args:
             retailer_id (int): The ID of the retailer being added/changed.
             tyre (Tyre): The tyre to be added/changed.
-
-        Returns:
-            int: The tyre_id added.
         """
         brand_id: int = self.get_or_create_brand(tyre.brand)
         season_id: int = self.get_or_create_season(tyre.season)
@@ -299,5 +296,3 @@ class TyreDB:
                 tyre.db_rating_number, tyre.db_rating_letter, tyre.budget, tyre.electric, vehicle_tyre_type_id
             )
         )
-
-        return self.cursor.lastrowid
