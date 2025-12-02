@@ -8,11 +8,9 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.ie.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
-from selenium.webdriver.support.expected_conditions import title_is
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
 import utils
 from scrapers.base_scraper import BaseScraper
 from tyre import Tyre
@@ -29,6 +27,12 @@ class DexelScraper(BaseScraper):
         return ""
 
     def load_webdriver(self) -> WebDriver:
+        """
+        Loads the webdriver with options enabled to try and minimise being detected as a bot.
+
+        Returns:
+            WebDriver: The WebDriver object for accessing the webpage.
+        """
         options = Options()
         options.add_argument('--disable-blink-features=AutomationControlled')
         options.add_experimental_option("excludeSwitches", ["enable-automation"])
@@ -36,25 +40,42 @@ class DexelScraper(BaseScraper):
         options.add_argument('user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36...')
         driver = webdriver.Chrome(options=options)
         driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
+
         driver.get(self.get_url())
 
         return driver
 
     def navigate_to_results(self, driver: WebDriver) -> None:
-        tyre_select_btn: WebElement = driver.find_element(By.PARTIAL_LINK_TEXT, 'Search by Tyre Size')
+        """
+        Step by step clicks and loads of part of the webpage to navigate to where the results will be listed.
+
+        Args:
+            driver (WebDriver): The object needed to be able to interact with the loaded webpage.
+        """
+        # Searches for the Search button
+        tyre_select_btn: WebElement = driver.find_element(By.LINK_TEXT, 'Search by Tyre Size.')
+        driver.execute_script("arguments[0].scrollIntoView(true);", tyre_select_btn) # Scrolls the button into view otherwise an error will occur when simulating the click
+        time.sleep(0.5)
         tyre_select_btn.click()
 
         time.sleep(utils.random_number())
 
+        # Wait until the width dropdown is populated
         width_dropdown: WebElement = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'width_list')))
         select = Select(width_dropdown)
+        driver.execute_script("arguments[0].scrollIntoView(true);", width_dropdown)
+        time.sleep(0.5)
         select.select_by_visible_text(str(self.tyre_width))
 
+        # Wait until the profile list exists
         profile_dropdown: WebElement = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'profile_list')))
 
         time.sleep(utils.random_number())
 
+        # Check that there's more than one option available
         WebDriverWait(driver, 10).until(lambda dropdown: len(Select(dropdown.find_element(By.CLASS_NAME, 'profile_list')).options) > 1)
+        driver.execute_script("arguments[0].scrollIntoView(true);", profile_dropdown)
+        time.sleep(0.5)
         select = Select(profile_dropdown)
         select.select_by_visible_text(str(self.aspect_ratio))
 
@@ -63,30 +84,42 @@ class DexelScraper(BaseScraper):
         time.sleep(utils.random_number())
 
         WebDriverWait(driver, 10).until(lambda dropdown: len(Select(dropdown.find_element(By.CLASS_NAME, 'size_list')).options) > 1)
+        driver.execute_script("arguments[0].scrollIntoView(true);", rim_dropdown)
+        time.sleep(0.5)
         select = Select(rim_dropdown)
         select.select_by_visible_text(str(self.rim_diameter))
 
         time.sleep(utils.random_number())
 
         search_button: WebElement = driver.find_element(By.PARTIAL_LINK_TEXT, 'Search')
+        driver.execute_script("arguments[0].scrollIntoView(true);", search_button)
+        time.sleep(0.5)
         search_button.click()
 
         time.sleep(utils.random_number())
 
-        button = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Select This Branch']")))
-        button.click()
+        branch_button = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Select This Branch']")))
+        driver.execute_script("arguments[0].scrollIntoView(true);", branch_button)
+        time.sleep(0.5)
+        branch_button.click()
 
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.LINK_TEXT, '>')))
+        WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.LINK_TEXT, '>')))
 
     def scrape(self) -> list[Tyre]:
+        """
+        Scrapes the Dexel website.
+
+        Returns:
+            list[Tyre]: The list of Tyres scraped.
+        """
         driver: WebDriver = self.load_webdriver()
-        self.navigate_to_results(driver)
-        next_page_button: WebElement
+        self.navigate_to_results(driver) # Natigates to the results page step by step with random time delay intervals
+        next_page_button: WebElement # Holds a reference to the '>' next page button each time a page loads
         tyres: list[Tyre] = []
 
-        while True:
+        while True: # Keeps looping until there is no more '>' next page button.
             soup: BeautifulSoup = BeautifulSoup(driver.page_source, 'lxml')
-            divs: ResultSet[Tag] = soup.select('div[class="tkf-product"]')
+            divs: ResultSet[Tag] = soup.select('div[class="tkf-product"]') # Each div tag holds 1 tyre product
 
             for div in divs:
                 sku: str | None = None
@@ -101,24 +134,24 @@ class DexelScraper(BaseScraper):
                 fuel_efficiency: str | None = None
                 db_rating_number: int | None = None
                 budget = None # This website doesn't list if a tyre is budget
-                electric: bool = False
                 tyre_type: str | None = None
 
                 tyre_details_div: Tag | None = div.find('p', class_='para-text')
-                price_span: Tag | None = div.find('span', class_='price_number')
+                price_span: Tag | None = div.find('span', id='defaultBuyingOptionPrice')
 
                 if price_span:
-                    price = float(price_span.get_text(strip=True)[1:])
+                    price_temp: str | None = re.sub(r'\s+', '', price_span.get_text(strip=True)[1:])
+                    price = float(price_temp) if price_temp else None
 
                 fuel_efficiency_div: Tag | None = div.find('div', class_=re.compile('^tyre_info_model fuel'))
 
                 if fuel_efficiency_div:
-                    fuel_efficiency = fuel_efficiency_div.get_text(strip=True)
+                    fuel_efficiency = fuel_efficiency_div.get_text(strip=True).upper()
 
                 wet_grip_div: Tag | None = div.find('div', class_=re.compile('^tyre_info_model grip'))
 
                 if wet_grip_div:
-                    wet_grip = wet_grip_div.get_text(strip=True)
+                    wet_grip = wet_grip_div.get_text(strip=True).upper()
 
                 db_rating_number_div: Tag | None = div.find('div', class_='exterior-noice')
 
@@ -134,33 +167,37 @@ class DexelScraper(BaseScraper):
                         weather: str | None = weather_icon_tag.get('title')
 
                         if weather:
-                            season = weather.lower().capitalize()
+                            season = weather.capitalize()
 
                 tyre_icons_vehicle_div: Tag | None = div.find('div', class_=re.compile('^tyre-icons vehicle-types'))
 
                 if tyre_icons_vehicle_div:
-                    vehicle_icon_tag: Tag | None = tyre_icons_div.find('i', class_=re.compile('^icon-'))
+                    vehicle_icon_tag: Tag | None = tyre_icons_vehicle_div.find('i', class_=re.compile('^icon-'))
 
                     if vehicle_icon_tag:
                         vehicle_type: str | None = vehicle_icon_tag.get('title')
 
                         if vehicle_type:
-                            tyre_type = vehicle_type.lower().capitalize()
+                            tyre_type = vehicle_type.capitalize()
 
                 ev_button: Tag | None = div.find('button', title='Electric Vehicle')
                 electric: bool = ev_button != None
 
                 if tyre_details_div:
                     tyre_speed_details: str | None = tyre_details_div.get_text(strip=True).split()[1]
-                    load_index = int(tyre_speed_details[:-1])
-                    speed_rating = tyre_speed_details[-1:]
+                    match = re.search(r'\d+[A-Z]', tyre_speed_details) # Removes any garbage around the load index and speed rating
+
+                    if match:
+                        tyre_speed_details = match.group()
+                        load_index = int(tyre_speed_details[:-1])
+                        speed_rating = tyre_speed_details[-1:].upper()
 
                 form: Tag | None = div.find('form', class_='book_tyre')
 
                 if form:
-                    sku = form.find('input', name='prodCode').get('value').strip()
-                    brand = form.find('input', name='brand').get('value').strip()
-                    pattern = form.find('input', name='pattern').get('value').strip()
+                    sku = form.find('input', {'name': 'prodCode'}).get('value').strip()
+                    brand = form.find('input', {'name': 'brand'}).get('value').strip().title()
+                    pattern = form.find('input', {'name': 'pattern'}).get('value').strip()
 
                 tyres.append(
                     Tyre(
@@ -185,11 +222,14 @@ class DexelScraper(BaseScraper):
                 )
 
             try:
+                # At the bottom of the search results page, as long as there's a '>' button it means there's more pages to load
                 next_page_button = driver.find_element(By.LINK_TEXT, '>')
-                next_page_button.click()
+                driver.execute_script("arguments[0].scrollIntoView(true);", next_page_button)
+                time.sleep(0.5)
+                next_page_button.click() # Click the '>' button and wait to see if there's another one, if not break out and finish
                 WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.LINK_TEXT, '>')))
                 time.sleep(utils.random_number())
             except NoSuchElementException:
-                break
+                break # Breaks out of the while loop
 
         return tyres
