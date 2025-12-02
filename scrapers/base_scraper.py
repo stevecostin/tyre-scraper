@@ -39,7 +39,7 @@ class BaseScraper(ABC):
     @abstractmethod
     def scrape(self) -> list[Tyre]:
         """
-        Starts the scraping process on the URL provided by the get_request_url() method.
+        Starts the scraping process for the particular scraper that implements this class.
 
         Returns:
             list[Tyre]: The list of Tyres that have been scraped from the website.
@@ -53,7 +53,7 @@ class BaseScraper(ABC):
     def get_csv_filename() -> str:
         """
         Returns:
-            str: The name of the CSV file that will be used for writing data to (e.g. [domain].csv).
+            str: The name of the CSV file that will be used for writing the data to.
         """
         return "tyre_scrape.csv"
 

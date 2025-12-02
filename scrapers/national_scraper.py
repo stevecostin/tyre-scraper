@@ -18,6 +18,12 @@ class NationalScraper(BaseScraper):
         return f"{url}/tyres-search/{self.tyre_width}-{self.aspect_ratio}-{self.rim_diameter}?pc=DN67RL"
     
     def scrape(self) -> list[Tyre]:
+        """
+        Scrapes the National website.
+
+        Returns:
+            list[Tyre]: The list of Tyres scraped.
+        """
         tyres: list[Tyre] = []
 
         try:

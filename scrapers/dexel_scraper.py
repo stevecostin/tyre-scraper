@@ -58,7 +58,7 @@ class DexelScraper(BaseScraper):
 
     def navigate_to_results(self, driver: WebDriver) -> bool:
         """
-        Step by step clicks and loads of part of the webpage to navigate to where the results will be listed.
+        Step by step clicks and loads each of part of the webpage to navigate to where the results will be listed.
 
         Args:
             driver (WebDriver): The object needed to be able to interact with the loaded webpage.
